@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java Collections & File I/O — CT04 Exam Prep</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #ffffff;
+            --text: #333333;
+            --text-muted: #6b7280;
+            --code-bg: #f4f4f4;
+            --sidebar-bg: #f8f9fa;
+            --accent: #2563eb;
+            --border: #e5e7eb;
+            --pitfall-bg: #fffbeb;
+            --pitfall-border: #f59e0b;
+            --tip-bg: #eff6ff;
+            --tip-border: #3b82f6;
+            --exam-bg: #f0fdf4;
+            --exam-border: #16a34a;
+            --sidebar-width: 248px;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 14.5px;
+            line-height: 1.72;
+            display: flex;
+        }
+
+        /* ── SIDEBAR ──────────────────────────────── */
+        .sidebar {
+            position: fixed;
+            top: 0; left: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            background: #1e3a8a;
+            color: #ffffff;
+            padding: 18px 16px 16px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header .course-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0.65;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-header .guide-title {
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .sidebar nav { padding: 10px 0 20px; }
+
+        .nav-group-label {
+            font-size: 9.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            padding: 10px 16px 3px;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            text-decoration: none;
+            color: #4b5563;
+            font-size: 13px;
+            border-left: 3px solid transparent;
+            transition: background 0.12s, color 0.12s, border-color 0.12s;
+            gap: 7px;
+        }
+
+        .sidebar a:hover { background: #eaecf0; color: var(--accent); }
+
+        .sidebar a.active {
+            background: #dbeafe;
+            color: var(--accent);
+            border-left-color: var(--accent);
+            font-weight: 600;
+        }
+
+        .sidebar a .ct-badge {
+            margin-left: auto;
+            background: #15803d;
+            color: #fff;
+            font-size: 8.5px;
+            font-weight: 700;
+            padding: 2px 5px;
+            border-radius: 3px;
+            letter-spacing: 0.04em;
+            flex-shrink: 0;
+        }
+
+        /* ── MAIN ─────────────────────────────────── */
+        .main {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 44px 52px 88px;
+            max-width: 900px;
+        }
+
+        /* ── PAGE HEADER ──────────────────────────── */
+        .page-header {
+            padding-bottom: 28px;
+            margin-bottom: 44px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .page-header .eyebrow-tag {
+            display: inline-block;
+            background: #dbeafe;
+            color: var(--accent);
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            padding: 3px 9px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+        }
+
+        h1.page-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #111827;
+            line-height: 1.25;
+            margin-bottom: 8px;
+        }
+
+        .page-meta { color: var(--text-muted); font-size: 14px; }
+
+        /* ── SECTION ──────────────────────────────── */
+        section { margin-bottom: 60px; scroll-margin-top: 20px; }
+
+        .section-eyebrow {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+
+        h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111827;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 18px;
+        }
+
+        h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 26px 0 9px;
+        }
+
+        h4 { font-size: 13.5px; font-weight: 600; color: #374151; margin: 14px 0 6px; }
+
+        p { margin-bottom: 11px; }
+        p:last-child { margin-bottom: 0; }
+        ul, ol { padding-left: 20px; margin-bottom: 11px; }
+        li { margin-bottom: 4px; }
+
+        /* ── CODE ─────────────────────────────────── */
+        pre {
+            background: var(--code-bg);
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 15px 18px;
+            overflow-x: auto;
+            margin: 12px 0;
+            font-size: 12.5px;
+            line-height: 1.7;
+        }
+
+        code { font-family: 'JetBrains Mono', 'Courier New', monospace; }
+
+        p code, li code, td code {
+            background: #eeeeee;
+            border: 1px solid #d8d8d8;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+
+        /* Token colours (CSS-only highlight) */
+        .kw  { color: #7c3aed; font-weight: 600; }
+        .cm  { color: #9ca3af; font-style: italic; }
+        .st  { color: #059669; }
+        .nu  { color: #d97706; }
+        .cl  { color: #1d4ed8; font-weight: 500; }
+        .fn  { color: #dc2626; }
+
+        /* ── OUTPUT BOX ───────────────────────────── */
+        .output-box {
+            background: #0f172a;
+            color: #86efac;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            padding: 13px 18px 14px;
+            border-radius: 6px;
+            margin: 12px 0;
+        }
+
+        .output-box::before {
+            content: "▸ Output";
+            display: block;
+            color: #64748b;
+            font-size: 9.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            margin-bottom: 8px;
+        }
+
+        /* ── CALLOUT BOXES ────────────────────────── */
+        .callout {
+            border-left: 4px solid;
+            border-radius: 0 6px 6px 0;
+            padding: 13px 16px;
+            margin: 14px 0;
+        }
+
+        .callout .callout-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 7px;
+        }
+
+        .callout p:last-child, .callout ul:last-child, .callout ol:last-child { margin-bottom: 0; }
+        .callout li { margin-bottom: 5px; }
+
+        .callout.pitfall { background: var(--pitfall-bg); border-color: var(--pitfall-border); }
+        .callout.pitfall .callout-title { color: #92400e; }
+
+        .callout.tip { background: var(--tip-bg); border-color: var(--tip-border); }
+        .callout.tip .callout-title { color: #1e40af; }
+
+        .callout.exam { background: var(--exam-bg); border-color: var(--exam-border); }
+        .callout.exam .callout-title { color: #166534; }
+
+        /* ── TABLES ───────────────────────────────── */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 13px 0;
+            font-size: 13.5px;
+        }
+
+        th {
+            background: #f1f5f9;
+            font-weight: 600;
+            text-align: left;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            color: #374151;
+            font-size: 12.5px;
+        }
+
+        td {
+            padding: 7px 12px;
+            border: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        tr:nth-child(even) td { background: #fafafa; }
+
+        /* ── STEP LIST ────────────────────────────── */
+        .step-list {
+            list-style: none;
+            padding: 0;
+            counter-reset: step;
+        }
+
+        .step-list li {
+            counter-increment: step;
+            position: relative;
+            padding: 12px 14px 12px 46px;
+            margin-bottom: 8px;
+            background: #fafafa;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+
+        .step-list li::before {
+            content: counter(step);
+            position: absolute;
+            left: 13px;
+            top: 13px;
+            width: 22px;
+            height: 22px;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 50%;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ── TOPIC BADGES ─────────────────────────── */
+        .badge-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px; }
+
+        .tbadge {
+            display: inline-block;
+            font-size: 10.5px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .tbadge.file       { background: #fef3c7; color: #92400e; }
+        .tbadge.arraylist  { background: #dbeafe; color: #1e40af; }
+        .tbadge.comparable { background: #d1fae5; color: #065f46; }
+        .tbadge.comparator { background: #ede9fe; color: #5b21b6; }
+
+        /* ── COMPARE GRID ─────────────────────────── */
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin: 14px 0;
+        }
+
+        .compare-card { border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+
+        .compare-card-header {
+            background: var(--code-bg);
+            padding: 9px 14px;
+            font-weight: 600;
+            font-size: 13px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .compare-card-body { padding: 12px 14px; font-size: 13.5px; }
+        .compare-card-body li { margin-bottom: 5px; }
+
+        /* ── CHECKLIST ────────────────────────────── */
+        .checklist { list-style: none; padding: 0; }
+
+        .checklist li {
+            padding: 7px 10px 7px 32px;
+            position: relative;
+            border-bottom: 1px solid var(--border);
+            font-size: 13.5px;
+        }
+
+        .checklist li:last-child { border-bottom: none; }
+
+        .checklist li::before {
+            content: "☐";
+            position: absolute;
+            left: 8px;
+            color: var(--accent);
+            font-size: 14px;
+        }
+
+        /* ── MISC ─────────────────────────────────── */
+        hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+        strong { font-weight: 600; }
+
+        .annotated-line { display: flex; gap: 16px; align-items: flex-start; }
+        .annotated-line pre { flex: 1; margin: 0; }
+        .annotation { font-size: 12px; color: var(--text-muted); padding-top: 4px; flex: 0 0 200px; }
+
+        /* ── RESPONSIVE ───────────────────────────── */
+        @media (max-width: 860px) {
+            .sidebar { display: none; }
+            .main { margin-left: 0; padding: 24px 20px 60px; max-width: 100%; }
+            .compare-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     SIDEBAR
+════════════════════════════════════════ -->
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="course-label">CT04 · Java Collections</div>
+        <div class="guide-title">Exam Preparation Guide</div>
+    </div>
+    <nav>
+        <div class="nav-group-label">Overview</div>
+        <a href="#analysis">📊 Exam Analysis</a>
+        <a href="#strategy">🎯 Full Marks Strategy</a>
+
+        <div class="nav-group-label">Core Topics</div>
+        <a href="#arraylist">ArrayList <span class="ct-badge">CT4</span></a>
+        <a href="#comparable">Comparable <span class="ct-badge">CT4</span></a>
+        <a href="#comparator">Comparator <span class="ct-badge">CT4</span></a>
+        <a href="#fileio">File I/O <span class="ct-badge">CT4</span></a>
+
+        <div class="nav-group-label">Exam Solutions</div>
+        <a href="#exam-solution">Full Solution Walkthrough</a>
+        <a href="#quick-ref">Quick Reference & Checklist</a>
+    </nav>
+</aside>
+
+<!-- ════════════════════════════════════════
+     MAIN CONTENT
+════════════════════════════════════════ -->
+<main class="main">
+
+    <!-- ╔══════════════════════════════════╗
+         ║  PAGE HEADER                     ║
+         ╚══════════════════════════════════╝ -->
+    <header class="page-header" id="header">
+        <div class="eyebrow-tag">CSE · Java Programming · CT04</div>
+        <h1 class="page-title">Java Collections &amp; File I/O<br>Ultimate Exam Preparation Guide</h1>
+        <p class="page-meta">Covers ArrayList · Comparable · Comparator · File I/O — with fully annotated CT04 solution, topic-by-topic pitfalls, and a full-marks writing strategy.</p>
+    </header>
+
+
+    <!-- ╔══════════════════════════════════╗
+         ║  EXAM PAPER ANALYSIS             ║
+         ╚══════════════════════════════════╝ -->
+    <section id="analysis">
+        <div class="section-eyebrow">Section 01</div>
+        <h2>Exam Paper Analysis (CT04)</h2>
+
+        <p>The CT04 question is a <strong>single, integrated programming problem</strong> that requires all four syllabus topics working together. Understanding the structure before you write a single line of code is the highest-leverage exam skill you can develop.</p>
+
+        <h3>What the Question Asks</h3>
+        <p>You are given <code>students.txt</code> where each line is <code>name,id,cgpa</code> (comma-separated). Some lines may have one or more missing fields. Your program must produce three output files:</p>
+        <table>
+            <thead><tr><th>Output File</th><th>Condition</th><th>Sort Order</th></tr></thead>
+            <tbody>
+                <tr><td><code>uga_candidate.txt</code></td><td>CGPA ≥ 3.70</td><td>CGPA <strong>descending</strong> (highest first)</td></tr>
+                <tr><td><code>probation.txt</code></td><td>CGPA &lt; 2.00</td><td>ID <strong>ascending</strong> (most senior first)</td></tr>
+                <tr><td><code>errors.txt</code></td><td>Any missing field</td><td>No sorting — preserve original order</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Topic Weights &amp; Exam Risk</h3>
+        <table>
+            <thead><tr><th>Topic</th><th>Role in the Question</th><th>Difficulty</th><th>Marks Risk</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><span class="tbadge file">File I/O</span></td>
+                    <td>Read <code>students.txt</code>; write 3 output files; handle exceptions</td>
+                    <td>Medium</td>
+                    <td>⚠️ High — forgetting <code>.close()</code> loses marks every time</td>
+                </tr>
+                <tr>
+                    <td><span class="tbadge arraylist">ArrayList</span></td>
+                    <td>Three separate lists: uga, probation, errors</td>
+                    <td>Low</td>
+                    <td>✅ Low risk — straightforward add &amp; iterate</td>
+                </tr>
+                <tr>
+                    <td><span class="tbadge comparator">Comparator</span></td>
+                    <td>CgpaComparator (desc) + IdComparator (asc) — two separate classes</td>
+                    <td>Medium</td>
+                    <td>⚠️ Medium — ascending/descending confusion is extremely common</td>
+                </tr>
+                <tr>
+                    <td>Missing Value Detection</td>
+                    <td>Identifying incomplete lines → errors.txt</td>
+                    <td><strong>High</strong></td>
+                    <td>🔴 Very High — most students miss the <code>split(",", -1)</code> requirement</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Key Patterns to Recognise</h3>
+        <ul>
+            <li><strong>Integration is deliberate.</strong> You cannot pass by knowing only one topic. Every part depends on the others.</li>
+            <li><strong>The hidden trap: missing value detection.</strong> Students who use <code>split(",")</code> without <code>-1</code> will silently drop trailing empty fields and miss some corrupt records entirely.</li>
+            <li><strong>Two comparators, two sort directions.</strong> One ascending, one descending — mixing them costs full marks on both output files.</li>
+            <li><strong>Three FileWriters, all must be closed.</strong> Forgetting any single <code>fw.close()</code> is a guaranteed runtime bug and a deduction on any marking scheme.</li>
+            <li><strong>Language note:</strong> The question text says "Python program" — this is a template mismatch. The entire course, all slides, and the official solution use <strong>Java</strong>. Write in Java.</li>
+        </ul>
+    </section>
+
+
+    <!-- ╔══════════════════════════════════╗
+         ║  FULL MARKS STRATEGY             ║
+         ╚══════════════════════════════════╝ -->
+    <section id="strategy">
+        <div class="section-eyebrow">Section 02</div>
+        <h2>Full Marks Strategy</h2>
+
+        <p>Knowing the material is necessary but not sufficient. How you organise and present your answer matters just as much. Follow this blueprint on exam day.</p>
+
+        <h3>Answer Structure — Always Write in This Order</h3>
+        <p>Examiners mark top-to-bottom. This order maximises partial credit even if you leave something incomplete:</p>
+        <ol class="step-list">
+            <li><strong>Imports first, always.</strong> Write <code>import java.io.*;</code> and <code>import java.util.*;</code> as the very first lines. This prevents cascading compile errors and costs you nothing.</li>
+            <li><strong>Define the Student class.</strong> Fields, constructor, and <code>toString()</code>. This is low-risk, earns immediate marks, and everything else depends on it.</li>
+            <li><strong>Write all Comparator classes.</strong> Each is a self-contained class. Place them before <code>main()</code> so the compiler sees them when you call <code>Collections.sort()</code>.</li>
+            <li><strong>Skeleton of main() — declare lists, open file, declare <code>throws Exception</code>.</strong> Put the structural bones in place before filling in logic. A skeleton with comments earns partial credit; empty space earns nothing.</li>
+            <li><strong>Fill the file-reading loop.</strong> Parse each line, check for missing values, create Student objects, add to the right list.</li>
+            <li><strong>Sort and write output files.</strong> One <code>Collections.sort()</code> + one FileWriter loop per output file. Close every FileWriter immediately after its loop.</li>
+        </ol>
+
+        <h3>Code Quality Tips That Score Marks</h3>
+        <ul>
+            <li><strong>Use <code>Double.compare(a, b)</code> for doubles</strong> — never subtraction. Subtracting doubles produces a <code>double</code>, not an <code>int</code>, causing a compile error.</li>
+            <li><strong>Descending = swap the arguments.</strong> <code>Double.compare(s2.cgpa, s1.cgpa)</code> (s2 first) gives descending order. This is the simplest, safest way.</li>
+            <li><strong>Always call <code>.trim()</code></strong> on parsed fields before calling <code>isEmpty()</code> or <code>parseInt()</code>. A space character is not empty, but it will crash <code>parseInt()</code>.</li>
+            <li><strong>Use <code>split(",", -1)</code></strong> — the <code>-1</code> argument tells Java to keep empty trailing fields. Without it, <code>"Alice,001,"</code> returns only 2 elements, and your <code>parts.length != 3</code> check still catches it — but <code>"Alice,,3.85"</code> returns 3 elements and an empty middle, which you also need to catch individually. Use <code>-1</code> and check each field.</li>
+            <li><strong>Close every file handle</strong> — open, write, close. If you forget even one <code>fw.close()</code>, data may not be flushed to disk.</li>
+        </ul>
+
+        <h3>Time Management (60-Minute CT)</h3>
+        <table>
+            <thead><tr><th>Phase</th><th>Time</th><th>Focus</th></tr></thead>
+            <tbody>
+                <tr><td>Read &amp; Plan</td><td>5 min</td><td>Count: classes needed, comparators needed, output files needed</td></tr>
+                <tr><td>Classes + Comparators</td><td>12 min</td><td>Student class + CgpaComparator + IdComparator</td></tr>
+                <tr><td>main() skeleton</td><td>5 min</td><td>Imports, throws, ArrayList declarations, Scanner open</td></tr>
+                <tr><td>Reading loop</td><td>15 min</td><td>split, missing-value check, parse, categorise</td></tr>
+                <tr><td>Sort + Write</td><td>13 min</td><td>Three Collections.sort + FileWriter loops</td></tr>
+                <tr><td>Final review</td><td>10 min</td><td>Check: all <code>.close()</code> calls? Correct comparator per sort? <code>-1</code> in split?</td></tr>
+            </tbody>
+        </table>
+
+        <div class="callout tip">
+            <div class="callout-title">💡 Partial Credit Tactic</div>
+            <p>If time runs short, leave skeleton code with inline comments such as <code>// sort by CGPA descending using CgpaComparator here</code>. A clearly structured incomplete answer always scores higher than a disorganised complete one. Markers reward logical thinking even without complete execution.</p>
+        </div>
+    </section>
+
+
+    <!-- ╔══════════════════════════════════╗
+         ║  TOPIC 01 — ARRAYLIST            ║
+         ╚══════════════════════════════════╝ -->
+    <section id="arraylist">
+        <div class="section-eyebrow">Topic 01</div>
+        <h2>ArrayList</h2>
+
+        <p>An <code>ArrayList</code> is a <strong>dynamic, resizable array</strong> of object references. Unlike a fixed-size array, it can grow or shrink at runtime. When it runs out of space, Java automatically allocates a larger block of memory, copies all elements over, and frees the old memory — all transparently.</p>
+
+        <h3>Declaration</h3>
+        <pre><code><span class="kw">import</span> java.util.ArrayList;   <span class="cm">// or import java.util.*;</span>
+
+ArrayList&lt;String&gt;  list     = <span class="kw">new</span> ArrayList&lt;&gt;();   <span class="cm">// String list</span>
+ArrayList&lt;Integer&gt; nums     = <span class="kw">new</span> ArrayList&lt;&gt;();   <span class="cm">// Integer list (NOT int)</span>
+ArrayList&lt;Student&gt; students = <span class="kw">new</span> ArrayList&lt;&gt;();   <span class="cm">// Custom class list</span></code></pre>
+
+        <h3>Core Methods Reference</h3>
+        <table>
+            <thead><tr><th>Method</th><th>What it does</th><th>Example</th></tr></thead>
+            <tbody>
+                <tr><td><code>add(e)</code></td><td>Append to end</td><td><code>list.add("Alice")</code></td></tr>
+                <tr><td><code>add(i, e)</code></td><td>Insert at index i, shift others right</td><td><code>list.add(1, "Bob")</code></td></tr>
+                <tr><td><code>get(i)</code></td><td>Return element at index i</td><td><code>String s = list.get(0)</code></td></tr>
+                <tr><td><code>set(i, e)</code></td><td>Replace element at index i</td><td><code>list.set(0, "Carol")</code></td></tr>
+                <tr><td><code>remove(i)</code></td><td>Remove by index</td><td><code>list.remove(2)</code></td></tr>
+                <tr><td><code>remove(obj)</code></td><td>Remove first occurrence of object</td><td><code>list.remove("Alice")</code></td></tr>
+                <tr><td><code>size()</code></td><td>Number of elements</td><td><code>int n = list.size()</code></td></tr>
+                <tr><td><code>clear()</code></td><td>Remove all elements</td><td><code>list.clear()</code></td></tr>
+                <tr><td><code>contains(o)</code></td><td>Return true if element exists</td><td><code>list.contains("Alice")</code></td></tr>
+                <tr><td><code>indexOf(o)</code></td><td>First index of element, -1 if absent</td><td><code>list.indexOf("Bob")</code></td></tr>
+            </tbody>
+        </table>
+
+        <h3>Iterating</h3>
+        <pre><code><span class="cm">// Enhanced for-each (preferred — clean and safe)</span>
+<span class="kw">for</span> (Student s : students) {
+    System.out.println(s.name);
+}
+
+<span class="cm">// Index-based loop (use when you need the index)</span>
+<span class="kw">for</span> (<span class="kw">int</span> i = 0; i &lt; students.size(); i++) {
+    System.out.println(i + ": " + students.get(i).name);
+}</code></pre>
+
+        <h3>Sorting an ArrayList</h3>
+        <pre><code><span class="kw">import</span> java.util.Collections;
+
+Collections.sort(students);                          <span class="cm">// uses Comparable (compareTo)</span>
+Collections.sort(students, <span class="kw">new</span> CgpaComparator());  <span class="cm">// uses Comparator (compare)</span>
+Collections.sort(list, Collections.reverseOrder()); <span class="cm">// reverse natural order</span></code></pre>
+
+        <h3>HashSet — Brief Reference</h3>
+        <p>A <code>HashSet</code> stores only <strong>unique</strong> elements and rejects duplicates silently. Order is not guaranteed.</p>
+        <pre><code>HashSet&lt;String&gt; set = <span class="kw">new</span> HashSet&lt;&gt;();
+set.add(<span class="st">"Apple"</span>);
+set.add(<span class="st">"Apple"</span>);                       <span class="cm">// duplicate — silently ignored</span>
+System.out.println(set.size());         <span class="cm">// prints 1</span>
+System.out.println(set.contains(<span class="st">"Apple"</span>));  <span class="cm">// true</span>
+set.remove(<span class="st">"Apple"</span>);
+System.out.println(set.contains(<span class="st">"Apple"</span>));  <span class="cm">// false</span></code></pre>
+
+        <div class="callout pitfall">
+            <div class="callout-title">⚠️ Common Pitfalls — ArrayList</div>
+            <ul>
+                <li><strong>Missing import:</strong> Forgetting <code>import java.util.ArrayList;</code> causes a compile error. Use <code>import java.util.*;</code> to cover everything at once.</li>
+                <li><strong>Array syntax on ArrayList:</strong> Writing <code>list[0]</code> instead of <code>list.get(0)</code> is a compile error. ArrayList is an object, not an array.</li>
+                <li><strong><code>remove(int)</code> vs <code>remove(Object)</code>:</strong> <code>list.remove(2)</code> removes the element <em>at index 2</em>. <code>list.remove("Bob")</code> removes the first occurrence of the String "Bob". These behave completely differently and the compiler won't warn you.</li>
+                <li><strong>Primitive types:</strong> <code>ArrayList&lt;int&gt;</code> is a compile error. Use <code>ArrayList&lt;Integer&gt;</code>. Autoboxing handles the conversion automatically.</li>
+                <li><strong>Hardcoding size:</strong> Never write <code>i &lt; 3</code> in a loop condition. Always use <code>i &lt; list.size()</code>.</li>
+                <li><strong>Forgetting <code>Collections.sort()</code> needs <code>import java.util.*</code>:</strong> This is separate from the ArrayList import — they are both in <code>java.util</code>, so one wildcard import covers both.</li>
+            </ul>
+        </div>
+
+        <div class="callout exam">
+            <div class="callout-title">✅ CT04 Application</div>
+            <p>You need <strong>three ArrayLists</strong>: <code>ArrayList&lt;Student&gt; uga</code>, <code>ArrayList&lt;Student&gt; probation</code>, and <code>ArrayList&lt;String&gt; errors</code>. Note that errors stores raw line strings, not Student objects. Declare all three before the file-reading loop.</p>
+        </div>
+    </section>
+
+
+    <!-- ╔══════════════════════════════════╗
+         ║  TOPIC 02 — COMPARABLE           ║
+         ╚══════════════════════════════════╝ -->
+    <section id="comparable">
+        <div class="section-eyebrow">Topic 02</div>
+        <h2>Comparable</h2>
+
+        <p>The <code>Comparable&lt;T&gt;</code> interface defines the <strong>natural (default) ordering</strong> of a class by embedding the comparison logic inside the class itself. Once implemented, <code>Collections.sort(list)</code> works without any extra argument — Java calls <code>compareTo()</code> automatically.</p>
+
+        <h3>How to Implement</h3>
+        <pre><code><span class="kw">class</span> <span class="cl">Student</span> <span class="kw">implements</span> Comparable&lt;Student&gt; {   <span class="cm">// 1. Declare on class</span>
+    String name;
+    String id;
+    <span class="kw">double</span> cgpa;
+
+    Student(String name, String id, <span class="kw">double</span> cgpa) {
+        this.name = name; this.id = id; this.cgpa = cgpa;
+    }
+
+    <span class="kw">public int</span> compareTo(Student other) {           <span class="cm">// 2. Override compareTo()</span>
+        <span class="cm">// Negative → this comes BEFORE other  (ascending)</span>
+        <span class="cm">// Positive → this comes AFTER  other</span>
+        <span class="cm">// Zero     → equal, no swap</span>
+        <span class="kw">if</span> (this.cgpa &gt; other.cgpa)      <span class="kw">return</span> -1;  <span class="cm">// higher CGPA first (descending)</span>
+        <span class="kw">else if</span> (this.cgpa &lt; other.cgpa) <span class="kw">return</span>  1;
+        <span class="kw">else</span> {
+            <span class="cm">// Tie-break by ID ascending</span>
+            <span class="kw">if</span>      (Integer.parseInt(this.id) &lt; Integer.parseInt(other.id)) <span class="kw">return</span> -1;
+            <span class="kw">else if</span> (Integer.parseInt(this.id) &gt; Integer.parseInt(other.id)) <span class="kw">return</span>  1;
+            <span class="kw">else return</span> 0;
+        }
+    }
+}</code></pre>
+
+        <h3>Calling It</h3>
+        <pre><code>Arrays.sort(array);           <span class="cm">// for arrays  — calls compareTo()</span>
+Collections.sort(list);       <span class="cm">// for ArrayList — calls compareTo()</span></code></pre>
+
+        <h3>Lecture Example Traced (Comparable.java)</h3>
+        <pre><code>Student s1 = <span class="kw">new</span> <span class="cl">Student</span>(<span class="st">"Adrita"</span>, <span class="st">"001"</span>, 2.9);
+Student s2 = <span class="kw">new</span> <span class="cl">Student</span>(<span class="st">"Badhon"</span>, <span class="st">"002"</span>, 3.8);   <span class="cm">// same CGPA as s3</span>
+Student s3 = <span class="kw">new</span> <span class="cl">Student</span>(<span class="st">"Chamely"</span>, <span class="st">"003"</span>, 3.8);  <span class="cm">// same CGPA as s2</span>
+Student[] array = {s1, s3, s2};
+Arrays.sort(array);   <span class="cm">// s2 and s3 tie on CGPA → tie-break by ID asc</span></code></pre>
+        <div class="output-box">Badhon: 002 cgpa:3.8<br>Chamely: 003 cgpa:3.8<br>Adrita: 001 cgpa:2.9</div>
+        <p>Badhon (ID 002) and Chamely (ID 003) both have CGPA 3.8, so the tie-break by ID ascending puts Badhon first. Adrita has the lowest CGPA and comes last.</p>
+
+        <h3>The <code>compareTo</code> Return Value — How to Think About It</h3>
+        <table>
+            <thead><tr><th>You return</th><th>Meaning</th><th>Effect in sorted output</th></tr></thead>
+            <tbody>
+                <tr><td>Any <strong>negative</strong> (e.g. -1)</td><td><code>this</code> ranks lower (comes earlier)</td><td><code>this</code> appears <strong>before</strong> other</td></tr>
+                <tr><td><strong>0</strong></td><td>Equal</td><td>Relative order unchanged</td></tr>
+                <tr><td>Any <strong>positive</strong> (e.g. +1)</td><td><code>this</code> ranks higher (comes later)</td><td><code>this</code> appears <strong>after</strong> other</td></tr>
+            </tbody>
+        </table>
+
+        <div class="callout pitfall">
+            <div class="callout-title">⚠️ Common Pitfalls — Comparable</div>
+            <ul>
+                <li><strong>Missing the type parameter:</strong> Writing <code>implements Comparable</code> (raw) compiles but is a warning. Always write <code>implements Comparable&lt;Student&gt;</code> so <code>compareTo</code> takes a <code>Student</code>, not an <code>Object</code>.</li>
+                <li><strong>Wrong return for descending order:</strong> Returning <code>-1</code> when <code>this.cgpa &gt; other.cgpa</code> gives <em>descending</em> (largest first). Many students instinctively return <code>+1</code> here thinking "my CGPA is bigger so I'm 'bigger'" — this reverses the sort.</li>
+                <li><strong>Double subtraction trick doesn't work:</strong> <code>return (int)(this.cgpa - other.cgpa)</code> fails for small differences (e.g. 3.80 − 3.75 = 0.05, cast to int = 0 → treated as equal). Always use explicit if-else.</li>
+                <li><strong>Not handling the tie-break:</strong> If the spec says "sort by CGPA; ties broken by ID", returning 0 for equal CGPAs loses marks. You must implement the nested tie-break logic.</li>
+                <li><strong><code>Arrays.sort()</code> vs <code>Collections.sort()</code>:</strong> <code>Arrays.sort()</code> for arrays, <code>Collections.sort()</code> for ArrayList. Using the wrong one is a compile error.</li>
+            </ul>
+        </div>
+    </section>
+
+
+    <!-- ╔══════════════════════════════════╗
+         ║  TOPIC 03 — COMPARATOR          ║
+         ╚══════════════════════════════════╝ -->
+    <section id="comparator">
+        <div class="section-eyebrow">Topic 03</div>
+        <h2>Comparator</h2>
+
+        <p>A <code>Comparator&lt;T&gt;</code> is a <strong>separate class</strong> that defines a custom ordering for objects without modifying their class. You can create as many Comparators as you need — one per sorting criterion — and pass whichever you need to <code>Collections.sort()</code>.</p>
+
+        <div class="compare-grid">
+            <div class="compare-card">
+                <div class="compare-card-header">🔵 Comparable</div>
+                <div class="compare-card-body">
+                    <ul>
+                        <li>Logic lives <em>inside</em> the class</li>
+                        <li>One natural order per class</li>
+                        <li>Method: <code>compareTo(T other)</code></li>
+                        <li>Sort: <code>Collections.sort(list)</code></li>
+                        <li>Package: <code>java.lang</code> (auto-imported)</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="compare-card">
+                <div class="compare-card-header">🟣 Comparator</div>
+                <div class="compare-card-body">
+                    <ul>
+                        <li>Logic lives in a <em>separate class</em></li>
+                        <li>Unlimited orderings per class</li>
+                        <li>Method: <code>compare(T o1, T o2)</code></li>
+                        <li>Sort: <code>Collections.sort(list, comp)</code></li>
+                        <li>Package: <code>java.util</code> (must import)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <h3>CGPA Comparator — Descending (from lecture CgBasedComparator)</h3>
+        <pre><code><span class="kw">class</span> <span class="cl">CgBasedComparator</span> <span class="kw">implements</span> Comparator&lt;Student&gt; {
+    <span class="kw">public int</span> compare(Student o1, Student o2) {
+        <span class="kw">if</span>      (o1.cgpa &gt; o2.cgpa) <span class="kw">return</span> -1;   <span class="cm">// o1 first → highest CGPA at top</span>
+        <span class="kw">else if</span> (o1.cgpa &lt; o2.cgpa) <span class="kw">return</span>  1;
+        <span class="kw">else                         return</span>  0;
+    }
+}</code></pre>
+
+        <h3>ID Comparator — Descending (from lecture IDBasedComparator)</h3>
+        <pre><code><span class="kw">class</span> <span class="cl">IDBasedComparator</span> <span class="kw">implements</span> Comparator&lt;Student&gt; {
+    <span class="kw">public int</span> compare(Student o1, Student o2) {
+        <span class="kw">int</span> id1 = Integer.parseInt(o1.id);
+        <span class="kw">int</span> id2 = Integer.parseInt(o2.id);
+        <span class="kw">if</span>      (id1 &gt; id2) <span class="kw">return</span> -1;   <span class="cm">// largest ID first</span>
+        <span class="kw">else if</span> (id1 &lt; id2) <span class="kw">return</span>  1;
+        <span class="kw">else                return</span>  0;
+    }
+}</code></pre>
+
+        <h3>ID Comparator — Ascending (from Main.java StudentIdComparator)</h3>
+        <pre><code><span class="kw">class</span> <span class="cl">StudentIdComparator</span> <span class="kw">implements</span> Comparator&lt;Student&gt; {
+    <span class="kw">public int</span> compare(Student s1, Student s2) {
+        <span class="kw">int</span> left  = Integer.parseInt(s1.id);
+        <span class="kw">int</span> right = Integer.parseInt(s2.id);
+        <span class="kw">if</span>      (left &gt; right) <span class="kw">return</span>  1;   <span class="cm">// smallest ID first</span>
+        <span class="kw">else if</span> (left &lt; right) <span class="kw">return</span> -1;
+        <span class="kw">else                  return</span>  0;
+    }
+}</code></pre>
+
+        <h3>Cleaner Shorthand: <code>Double.compare()</code> and <code>Integer.compare()</code></h3>
+        <pre><code><span class="cm">// Double.compare(a, b) returns negative if a &lt; b, 0 if equal, positive if a &gt; b</span>
+
+<span class="cm">// Descending CGPA — swap s2, s1 to reverse the order</span>
+<span class="kw">class</span> <span class="cl">CgpaDescComparator</span> <span class="kw">implements</span> Comparator&lt;Student&gt; {
+    <span class="kw">public int</span> compare(Student s1, Student s2) {
+        <span class="kw">return</span> Double.compare(s2.cgpa, s1.cgpa);   <span class="cm">// s2 first → descending</span>
+    }
+}
+
+<span class="cm">// Ascending ID — natural order: s1 first</span>
+<span class="kw">class</span> <span class="cl">IdAscComparator</span> <span class="kw">implements</span> Comparator&lt;Student&gt; {
+    <span class="kw">public int</span> compare(Student s1, Student s2) {
+        <span class="kw">return</span> Integer.compare(s1.id, s2.id);      <span class="cm">// s1 first → ascending</span>
+    }
+}</code></pre>
+
+        <h3>Anonymous Inner Class (Inline Comparator — from lecture slides)</h3>
+        <pre><code><span class="cm">// No need for a separate named class — write the Comparator inline</span>
+Collections.sort(students, <span class="kw">new</span> Comparator&lt;Student&gt;() {
+    <span class="kw">public int</span> compare(Student o1, Student o2) {
+        <span class="kw">return</span> o1.name.compareTo(o2.name);  <span class="cm">// sort by name ascending</span>
+    }
+});</code></pre>
+
+        <h3>Ascending vs Descending — Quick Reference</h3>
+        <table>
+            <thead><tr><th>Goal</th><th>What compare(o1, o2) returns</th><th>Shorthand</th></tr></thead>
+            <tbody>
+                <tr><td>Ascending (small → large)</td><td>negative when o1 &lt; o2</td><td><code>Double.compare(o1.x, o2.x)</code></td></tr>
+                <tr><td>Descending (large → small)</td><td>negative when o1 &gt; o2</td><td><code>Double.compare(o2.x, o1.x)</code> (swapped)</td></tr>
+            </tbody>
+        </table>
+
+        <div class="callout pitfall">
+            <div class="callout-title">⚠️ Common Pitfalls — Comparator</div>
+            <ul>
+                <li><strong>Forgetting the import:</strong> <code>Comparator</code> is in <code>java.util</code>, not <code>java.lang</code>. Without <code>import java.util.Comparator;</code> (or <code>import java.util.*;</code>), <code>implements Comparator</code> won't compile.</li>
+                <li><strong>Double subtraction is a compile error:</strong> <code>return (int)(o1.cgpa - o2.cgpa)</code> — the subtraction produces a <code>double</code>, and casting it to <code>int</code> silently discards precision (0.1 difference becomes 0, treated as equal). Use <code>Double.compare()</code> or explicit if-else.</li>
+                <li><strong>Descending/ascending confusion:</strong> For descending, <em>return -1 when o1 is BIGGER</em>. This puts the bigger value at the front. Many students intuitively return +1 here, reversing the entire sort.</li>
+                <li><strong>Passing the wrong Comparator:</strong> If you have <code>CgpaComparator</code> and <code>IdComparator</code>, double-check which one you pass to which <code>Collections.sort()</code> call. Swapping them gives completely wrong output and full marks lost.</li>
+                <li><strong>Writing <code>compareTo()</code> instead of <code>compare()</code>:</strong> Comparator requires <code>compare(T o1, T o2)</code>. If you write <code>compareTo()</code>, the interface is NOT satisfied — compile error or no sorting effect.</li>
+                <li><strong><code>Integer.parseInt()</code> on an int field:</strong> If <code>id</code> is declared as <code>int</code> in the Student class, do NOT call <code>Integer.parseInt(s.id)</code> — that's a method call on an int, which is a type error. Know whether your field is <code>int</code> or <code>String</code>.</li>
+            </ul>
+        </div>
+
+        <div class="callout exam">
+            <div class="callout-title">✅ CT04 — Two Comparators Needed</div>
+            <ul>
+                <li><strong>CgpaComparator:</strong> <code>return Double.compare(s2.cgpa, s1.cgpa)</code> — descending, for <code>uga_candidate.txt</code></li>
+                <li><strong>IdComparator:</strong> <code>return Integer.compare(s1.id, s2.id)</code> — ascending, for <code>probation.txt</code></li>
+                <li>In CT04, <code>id</code> is declared as <code>int</code> in Student (not String), so use <code>Integer.compare()</code> directly — no <code>parseInt()</code> needed.</li>
+            </ul>
+        </div>
+    </section>
+
+
+    <!-- ╔══════════════════════════════════╗
+         ║  TOPIC 04 — FILE I/O             ║
+         ╚══════════════════════════════════╝ -->
+    <section id="fileio">
+        <div class="section-eyebrow">Topic 04</div>
+        <h2>File I/O</h2>
+
+        <p>Java provides several classes for reading and writing text files. This course uses two patterns: <strong>Scanner + FileWriter</strong> (simple and direct) and <strong>BufferedReader + BufferedWriter</strong> (faster for large files). You must handle exceptions with either <code>throws Exception</code> on the method or a <code>try-catch</code> block.</p>
+
+        <h3>Pattern 1: Scanner (Reading) + FileWriter (Writing)</h3>
+        <p>This is the pattern used in the CT04 solution and in <code>Main.java</code> from lecture:</p>
+        <pre><code><span class="kw">import</span> java.io.*;
+<span class="kw">import</span> java.util.*;
+
+<span class="kw">public class</span> <span class="cl">Main</span> {
+    <span class="kw">public static void</span> main(String[] args) <span class="kw">throws</span> Exception {
+
+        <span class="cm">// ── Reading ──────────────────────────────────────────</span>
+        Scanner sc = <span class="kw">new</span> Scanner(<span class="kw">new</span> File(<span class="st">"students.txt"</span>));  <span class="cm">// FileNotFoundException</span>
+        <span class="kw">while</span> (sc.hasNextLine()) {
+            String line = sc.nextLine();
+            <span class="cm">// parse line ...</span>
+        }
+        sc.close();  <span class="cm">// good practice</span>
+
+        <span class="cm">// ── Writing ──────────────────────────────────────────</span>
+        FileWriter fw = <span class="kw">new</span> FileWriter(<span class="st">"output.txt"</span>);   <span class="cm">// IOException</span>
+        fw.write(<span class="st">"Alice,001,3.85\n"</span>);
+        fw.close();   <span class="cm">// CRITICAL — data may not flush without this!</span>
+    }
+}</code></pre>
+
+        <h3>Pattern 2: BufferedReader + BufferedWriter (from FileIO.pdf lecture)</h3>
+        <pre><code><span class="kw">import</span> java.io.*;
+
+<span class="kw">public class</span> <span class="cl">Main</span> {
+    <span class="kw">public static void</span> main(String[] args) {
+        <span class="kw">try</span> {
+            BufferedReader reader = <span class="kw">new</span> BufferedReader(<span class="kw">new</span> FileReader(<span class="st">"B.txt"</span>));
+            BufferedWriter writer = <span class="kw">new</span> BufferedWriter(<span class="kw">new</span> FileWriter(<span class="st">"A.txt"</span>));
+
+            String s;
+            <span class="kw">while</span> ((s = reader.readLine()) != <span class="kw">null</span>) {  <span class="cm">// null = end of file</span>
+                writer.write(s);
+                writer.newLine();   <span class="cm">// platform-safe newline (\n on Linux, \r\n on Windows)</span>
+            }
+            reader.close();
+            writer.close();
+        } <span class="kw">catch</span> (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+
+        <h3>Exception Handling — Two Valid Approaches</h3>
+        <pre><code><span class="cm">// Approach A — declare throws (cleaner for exam, fewer lines)</span>
+<span class="kw">public static void</span> main(String[] args) <span class="kw">throws</span> Exception { ... }
+
+<span class="cm">// Approach B — try-catch (explicitly handles the exception in-method)</span>
+<span class="kw">try</span> {
+    <span class="cm">// file operations</span>
+} <span class="kw">catch</span> (IOException e) {
+    e.printStackTrace();
+}</code></pre>
+        <p>Either approach is acceptable. In exam conditions, <code>throws Exception</code> is faster to write and less error-prone.</p>
+
+        <h3>Parsing CSV Lines + Missing Value Detection</h3>
+        <p>This is the most important and most-failed pattern in CT04. Pay careful attention to the <code>-1</code> argument in <code>split</code>:</p>
+        <pre><code>String line = sc.nextLine();
+String[] parts = line.split(<span class="st">","</span>, -1);   <span class="cm">// -1 preserves trailing empty fields!</span>
+
+<span class="cm">// Without -1: "Alice,001," → parts = ["Alice","001"]  (length 2)</span>
+<span class="cm">// With    -1: "Alice,001," → parts = ["Alice","001",""] (length 3, empty string at end)</span>
+
+<span class="kw">if</span> (parts.length != 3 ||
+    parts[0].trim().isEmpty() ||
+    parts[1].trim().isEmpty() ||
+    parts[2].trim().isEmpty()) {
+    errors.add(line);   <span class="cm">// mark as corrupt</span>
+    <span class="kw">continue</span>;           <span class="cm">// skip to next line</span>
+}
+
+<span class="cm">// Safe to parse — all three fields are present and non-empty</span>
+String name = parts[0].trim();
+<span class="kw">int</span>    id   = Integer.parseInt(parts[1].trim());
+<span class="kw">double</span> cgpa = Double.parseDouble(parts[2].trim());</code></pre>
+
+        <h3>Writing Multiple Output Files</h3>
+        <pre><code><span class="cm">// Standard pattern: open → write loop → close</span>
+FileWriter fw1 = <span class="kw">new</span> FileWriter(<span class="st">"uga_candidate.txt"</span>);
+<span class="kw">for</span> (Student s : uga)
+    fw1.write(s.name + <span class="st">","</span> + s.id + <span class="st">","</span> + s.cgpa + <span class="st">"\n"</span>);
+fw1.close();    <span class="cm">// ← must not forget this</span>
+
+FileWriter fw2 = <span class="kw">new</span> FileWriter(<span class="st">"probation.txt"</span>);
+<span class="kw">for</span> (Student s : probation)
+    fw2.write(s.name + <span class="st">","</span> + s.id + <span class="st">","</span> + s.cgpa + <span class="st">"\n"</span>);
+fw2.close();    <span class="cm">// ← must not forget this</span></code></pre>
+
+        <div class="callout pitfall">
+            <div class="callout-title">⚠️ Common Pitfalls — File I/O</div>
+            <ul>
+                <li><strong>No <code>throws Exception</code> and no try-catch:</strong> File operations can throw checked exceptions. Without either, your code will not compile. This is an automatic and avoidable zero.</li>
+                <li><strong>Forgetting <code>fw.close()</code>:</strong> <code>FileWriter</code> buffers writes in memory. If you don't close it, the buffer may never be flushed to disk. Your output files will be empty or truncated — a silent runtime bug. Close every FileWriter immediately after its write loop.</li>
+                <li><strong><code>split(",")</code> without -1 drops trailing empty fields:</strong> <code>"Alice,001,"</code> split by <code>","</code> gives <code>["Alice","001"]</code> — only 2 elements. Your <code>parts.length != 3</code> check catches this case anyway, but <code>split(",", -1)</code> is the correct and explicit approach that makes your intent clear. Always use it when detecting missing values.</li>
+                <li><strong>Not trimming:</strong> If the input file has spaces around commas (<code>"Alice , 001 , 3.85"</code>), then <code>parts[1]</code> is <code>" 001 "</code> and <code>Integer.parseInt(" 001 ")</code> throws a <code>NumberFormatException</code>. Always call <code>.trim()</code> before parsing.</li>
+                <li><strong><code>sc.next()</code> vs <code>sc.nextLine()</code>:</strong> <code>sc.next()</code> reads one space-delimited token. <code>sc.nextLine()</code> reads the entire line including commas. For CSV parsing, always use <code>nextLine()</code>.</li>
+                <li><strong><code>reader.readline()</code> (lowercase l):</strong> The correct spelling is <code>readLine()</code> with a capital L. The lowercase version does not exist — compile error.</li>
+                <li><strong><code>sc.hasNext()</code> vs <code>sc.hasNextLine()</code>:</strong> When reading line by line, use <code>hasNextLine()</code>. <code>hasNext()</code> checks for the next token, not the next line.</li>
+            </ul>
+        </div>
+    </section>
+
+
+    <!-- ╔══════════════════════════════════╗
+         ║  FULL SOLUTION WALKTHROUGH       ║
+         ╚══════════════════════════════════╝ -->
+    <section id="exam-solution">
+        <div class="section-eyebrow">CT04 — Complete Solution</div>
+        <h2>Full Solution Walkthrough</h2>
+
+        <p>The CT04 question solved step-by-step, with every decision annotated. Read through this once understanding each piece; then use the copy-ready version at the bottom to practice writing it from memory.</p>
+
+        <div class="callout tip">
+            <div class="callout-title">📄 CT04 Problem Statement (Restated)</div>
+            <p>File <code>students.txt</code> contains comma-separated student records (<code>name, id, cgpa</code>). Some lines have missing values. Write a Java program that produces:</p>
+            <ul>
+                <li><strong>uga_candidate.txt</strong> — students with CGPA ≥ 3.70, sorted by CGPA <em>descending</em></li>
+                <li><strong>probation.txt</strong> — students with CGPA &lt; 2.00, sorted by ID <em>ascending</em></li>
+                <li><strong>errors.txt</strong> — all lines with one or more missing values</li>
+            </ul>
+        </div>
+
+        <h3>Step 1 — Imports and Student Class</h3>
+        <div class="badge-row">
+            <span class="tbadge arraylist">ArrayList</span>
+            <span class="tbadge file">File I/O</span>
+        </div>
+        <p>Declare both wildcard imports at the top. The Student class uses <code>int id</code> (not String) so <code>Integer.compare()</code> works directly without <code>parseInt()</code>.</p>
+        <pre><code><span class="kw">import</span> java.io.*;
+<span class="kw">import</span> java.util.*;
+
+<span class="kw">class</span> <span class="cl">Student</span> {
+    String name;
+    <span class="kw">int</span> id;        <span class="cm">// int, not String — simplifies comparator</span>
+    <span class="kw">double</span> cgpa;
+
+    <span class="cl">Student</span>(String name, <span class="kw">int</span> id, <span class="kw">double</span> cgpa) {
+        this.name = name;
+        this.id   = id;
+        this.cgpa = cgpa;
+    }
+
+    <span class="kw">public</span> String toString() {
+        <span class="kw">return</span> name + <span class="st">", "</span> + id + <span class="st">", "</span> + cgpa;
+    }
+}</code></pre>
+
+        <h3>Step 2 — Two Comparator Classes</h3>
+        <div class="badge-row"><span class="tbadge comparator">Comparator</span></div>
+        <p>Write these before <code>main()</code>. Each class handles exactly one output file's sort order.</p>
+        <pre><code><span class="cm">// uga_candidate.txt needs CGPA descending: swap s2, s1 in Double.compare</span>
+<span class="kw">class</span> <span class="cl">CgpaComparator</span> <span class="kw">implements</span> Comparator&lt;Student&gt; {
+    <span class="kw">public int</span> compare(Student s1, Student s2) {
+        <span class="kw">return</span> Double.compare(s2.cgpa, s1.cgpa);  <span class="cm">// s2 first = descending</span>
+    }
+}
+
+<span class="cm">// probation.txt needs ID ascending: s1 first in Integer.compare</span>
+<span class="kw">class</span> <span class="cl">IdComparator</span> <span class="kw">implements</span> Comparator&lt;Student&gt; {
+    <span class="kw">public int</span> compare(Student s1, Student s2) {
+        <span class="kw">return</span> Integer.compare(s1.id, s2.id);     <span class="cm">// s1 first = ascending</span>
+    }
+}</code></pre>
+
+        <h3>Step 3 — Main Method: Declare Lists and Open File</h3>
+        <div class="badge-row">
+            <span class="tbadge arraylist">ArrayList</span>
+            <span class="tbadge file">File I/O</span>
+        </div>
+        <pre><code><span class="kw">public class</span> <span class="cl">Main</span> {
+    <span class="kw">public static void</span> main(String[] args) <span class="kw">throws</span> Exception {
+
+        ArrayList&lt;Student&gt; uga       = <span class="kw">new</span> ArrayList&lt;&gt;();
+        ArrayList&lt;Student&gt; probation = <span class="kw">new</span> ArrayList&lt;&gt;();
+        ArrayList&lt;String&gt;  errors    = <span class="kw">new</span> ArrayList&lt;&gt;();  <span class="cm">// stores raw lines</span>
+
+        Scanner sc = <span class="kw">new</span> Scanner(<span class="kw">new</span> File(<span class="st">"students.txt"</span>));</code></pre>
+
+        <h3>Step 4 — Reading Loop: Parse, Validate, Categorise</h3>
+        <div class="badge-row">
+            <span class="tbadge file">File I/O</span>
+            <span class="tbadge arraylist">ArrayList</span>
+        </div>
+        <p>The <code>-1</code> in <code>split</code> is the most commonly missed detail in this entire question. Without it, a trailing empty field is silently dropped and the error isn't detected correctly.</p>
+        <pre><code>        <span class="kw">while</span> (sc.hasNextLine()) {
+            String line = sc.nextLine();
+            String[] parts = line.split(<span class="st">","</span>, -1);  <span class="cm">// -1 keeps trailing empty strings</span>
+
+            <span class="cm">// Detect missing values: wrong count, OR any field is blank after trim</span>
+            <span class="kw">if</span> (parts.length != 3 ||
+                parts[0].trim().isEmpty() ||
+                parts[1].trim().isEmpty() ||
+                parts[2].trim().isEmpty()) {
+                errors.add(line);   <span class="cm">// add the raw corrupt line</span>
+                <span class="kw">continue</span>;           <span class="cm">// skip — don't try to parse it</span>
+            }
+
+            <span class="cm">// Parse — safe because we validated above</span>
+            String name = parts[0].trim();
+            <span class="kw">int</span>    id   = Integer.parseInt(parts[1].trim());
+            <span class="kw">double</span> cgpa = Double.parseDouble(parts[2].trim());
+            Student s = <span class="kw">new</span> Student(name, id, cgpa);
+
+            <span class="cm">// Categorise into the right list</span>
+            <span class="kw">if</span>      (cgpa &gt;= 3.70) uga.add(s);
+            <span class="kw">else if</span> (cgpa &lt; 2.00) probation.add(s);
+            <span class="cm">// Students with 2.00 &lt;= cgpa &lt; 3.70 are not in any output list</span>
+        }
+        sc.close();</code></pre>
+
+        <h3>Step 5 — Sort and Write Output Files</h3>
+        <div class="badge-row">
+            <span class="tbadge comparator">Comparator</span>
+            <span class="tbadge file">File I/O</span>
+        </div>
+        <p>One sort + one write loop per output file. Note: <code>errors.txt</code> requires no sorting — just write in the order received.</p>
+        <pre><code>        <span class="cm">// ── uga_candidate.txt: CGPA descending ──────────────────</span>
+        Collections.sort(uga, <span class="kw">new</span> CgpaComparator());
+        FileWriter fw1 = <span class="kw">new</span> FileWriter(<span class="st">"uga_candidate.txt"</span>);
+        <span class="kw">for</span> (Student s : uga)
+            fw1.write(s + <span class="st">"\n"</span>);    <span class="cm">// calls s.toString() automatically</span>
+        fw1.close();
+
+        <span class="cm">// ── probation.txt: ID ascending ─────────────────────────</span>
+        Collections.sort(probation, <span class="kw">new</span> IdComparator());
+        FileWriter fw2 = <span class="kw">new</span> FileWriter(<span class="st">"probation.txt"</span>);
+        <span class="kw">for</span> (Student s : probation)
+            fw2.write(s + <span class="st">"\n"</span>);
+        fw2.close();
+
+        <span class="cm">// ── errors.txt: no sort needed ──────────────────────────</span>
+        FileWriter fw3 = <span class="kw">new</span> FileWriter(<span class="st">"errors.txt"</span>);
+        <span class="kw">for</span> (String e : errors)
+            fw3.write(e + <span class="st">"\n"</span>);
+        fw3.close();
+    }
+}</code></pre>
+
+        <hr>
+
+        <h3>Complete Program — Copy-Ready</h3>
+        <pre><code><span class="kw">import</span> java.io.*;
+<span class="kw">import</span> java.util.*;
+
+<span class="kw">class</span> <span class="cl">Student</span> {
+    String name; <span class="kw">int</span> id; <span class="kw">double</span> cgpa;
+    <span class="cl">Student</span>(String name, <span class="kw">int</span> id, <span class="kw">double</span> cgpa) {
+        this.name = name; this.id = id; this.cgpa = cgpa;
+    }
+    <span class="kw">public</span> String toString() { <span class="kw">return</span> name + <span class="st">", "</span> + id + <span class="st">", "</span> + cgpa; }
+}
+
+<span class="kw">class</span> <span class="cl">CgpaComparator</span> <span class="kw">implements</span> Comparator&lt;Student&gt; {
+    <span class="kw">public int</span> compare(Student s1, Student s2) {
+        <span class="kw">return</span> Double.compare(s2.cgpa, s1.cgpa);  <span class="cm">// descending</span>
+    }
+}
+
+<span class="kw">class</span> <span class="cl">IdComparator</span> <span class="kw">implements</span> Comparator&lt;Student&gt; {
+    <span class="kw">public int</span> compare(Student s1, Student s2) {
+        <span class="kw">return</span> Integer.compare(s1.id, s2.id);     <span class="cm">// ascending</span>
+    }
+}
+
+<span class="kw">public class</span> <span class="cl">Main</span> {
+    <span class="kw">public static void</span> main(String[] args) <span class="kw">throws</span> Exception {
+        ArrayList&lt;Student&gt; uga       = <span class="kw">new</span> ArrayList&lt;&gt;();
+        ArrayList&lt;Student&gt; probation = <span class="kw">new</span> ArrayList&lt;&gt;();
+        ArrayList&lt;String&gt;  errors    = <span class="kw">new</span> ArrayList&lt;&gt;();
+
+        Scanner sc = <span class="kw">new</span> Scanner(<span class="kw">new</span> File(<span class="st">"students.txt"</span>));
+        <span class="kw">while</span> (sc.hasNextLine()) {
+            String line = sc.nextLine();
+            String[] parts = line.split(<span class="st">","</span>, -1);
+            <span class="kw">if</span> (parts.length != 3 || parts[0].trim().isEmpty() ||
+                parts[1].trim().isEmpty() || parts[2].trim().isEmpty()) {
+                errors.add(line); <span class="kw">continue</span>;
+            }
+            String name = parts[0].trim();
+            <span class="kw">int</span>    id   = Integer.parseInt(parts[1].trim());
+            <span class="kw">double</span> cgpa = Double.parseDouble(parts[2].trim());
+            Student s = <span class="kw">new</span> Student(name, id, cgpa);
+            <span class="kw">if</span>      (cgpa &gt;= 3.70) uga.add(s);
+            <span class="kw">else if</span> (cgpa &lt; 2.00) probation.add(s);
+        }
+        sc.close();
+
+        Collections.sort(uga, <span class="kw">new</span> CgpaComparator());
+        FileWriter fw1 = <span class="kw">new</span> FileWriter(<span class="st">"uga_candidate.txt"</span>);
+        <span class="kw">for</span> (Student s : uga) fw1.write(s + <span class="st">"\n"</span>);
+        fw1.close();
+
+        Collections.sort(probation, <span class="kw">new</span> IdComparator());
+        FileWriter fw2 = <span class="kw">new</span> FileWriter(<span class="st">"probation.txt"</span>);
+        <span class="kw">for</span> (Student s : probation) fw2.write(s + <span class="st">"\n"</span>);
+        fw2.close();
+
+        FileWriter fw3 = <span class="kw">new</span> FileWriter(<span class="st">"errors.txt"</span>);
+        <span class="kw">for</span> (String e : errors) fw3.write(e + <span class="st">"\n"</span>);
+        fw3.close();
+    }
+}</code></pre>
+    </section>
+
+
+    <!-- ╔══════════════════════════════════╗
+         ║  QUICK REFERENCE                 ║
+         ╚══════════════════════════════════╝ -->
+    <section id="quick-ref">
+        <div class="section-eyebrow">Appendix</div>
+        <h2>Quick Reference &amp; Pre-Exam Checklist</h2>
+
+        <h3>Comparator Ascending vs. Descending — At a Glance</h3>
+        <table>
+            <thead><tr><th>Field Type</th><th>Ascending (small first)</th><th>Descending (large first)</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><code>int id</code></td>
+                    <td><code>Integer.compare(o1.id, o2.id)</code></td>
+                    <td><code>Integer.compare(o2.id, o1.id)</code></td>
+                </tr>
+                <tr>
+                    <td><code>double cgpa</code></td>
+                    <td><code>Double.compare(o1.cgpa, o2.cgpa)</code></td>
+                    <td><code>Double.compare(o2.cgpa, o1.cgpa)</code></td>
+                </tr>
+                <tr>
+                    <td><code>String name</code></td>
+                    <td><code>o1.name.compareTo(o2.name)</code></td>
+                    <td><code>o2.name.compareTo(o1.name)</code></td>
+                </tr>
+                <tr>
+                    <td><code>String id</code> (stored as String)</td>
+                    <td><code>Integer.compare(Integer.parseInt(o1.id), Integer.parseInt(o2.id))</code></td>
+                    <td>Swap o2 and o1 in the above</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Comparable vs. Comparator — Side by Side</h3>
+        <table>
+            <thead><tr><th>Feature</th><th>Comparable</th><th>Comparator</th></tr></thead>
+            <tbody>
+                <tr><td>Package</td><td><code>java.lang</code> (auto)</td><td><code>java.util</code> (must import)</td></tr>
+                <tr><td>Where defined</td><td>Inside the class</td><td>Separate class</td></tr>
+                <tr><td>Method signature</td><td><code>public int compareTo(T o)</code></td><td><code>public int compare(T o1, T o2)</code></td></tr>
+                <tr><td>Sort call</td><td><code>Collections.sort(list)</code></td><td><code>Collections.sort(list, new Comp())</code></td></tr>
+                <tr><td>Number of orderings</td><td>One per class</td><td>Unlimited</td></tr>
+                <tr><td>Modifies original class?</td><td>Yes</td><td>No</td></tr>
+            </tbody>
+        </table>
+
+        <h3>File I/O API Summary</h3>
+        <table>
+            <thead><tr><th>Class</th><th>Direction</th><th>Key Methods</th><th>Exception</th></tr></thead>
+            <tbody>
+                <tr><td><code>Scanner(new File(...))</code></td><td>Read</td><td><code>hasNextLine()</code>, <code>nextLine()</code></td><td><code>FileNotFoundException</code></td></tr>
+                <tr><td><code>FileWriter(filename)</code></td><td>Write</td><td><code>write(String)</code>, <code>close()</code></td><td><code>IOException</code></td></tr>
+                <tr><td><code>BufferedReader(new FileReader(...))</code></td><td>Read</td><td><code>readLine()</code> returns null at EOF</td><td><code>IOException</code></td></tr>
+                <tr><td><code>BufferedWriter(new FileWriter(...))</code></td><td>Write</td><td><code>write(String)</code>, <code>newLine()</code>, <code>close()</code></td><td><code>IOException</code></td></tr>
+            </tbody>
+        </table>
+
+        <h3>Essential Imports</h3>
+        <pre><code><span class="kw">import</span> java.io.*;    <span class="cm">// File, FileReader, FileWriter, BufferedReader, BufferedWriter, IOException</span>
+<span class="kw">import</span> java.util.*;  <span class="cm">// ArrayList, Collections, Comparator, Scanner, Arrays, HashSet</span></code></pre>
+
+        <h3>Pre-Exam Self-Check</h3>
+        <ul class="checklist">
+            <li>Added <code>import java.io.*;</code> and <code>import java.util.*;</code> at the very top?</li>
+            <li>Declared <code>throws Exception</code> on <code>main()</code> (or wrapped everything in try-catch)?</li>
+            <li>Used <code>split(",", -1)</code> with the <code>-1</code> argument?</li>
+            <li>Called <code>.trim()</code> on each part before <code>isEmpty()</code>, <code>parseInt()</code>, or <code>parseDouble()</code>?</li>
+            <li>Closed every FileWriter with <code>fw.close()</code> after its write loop?</li>
+            <li>Passed the correct Comparator to each <code>Collections.sort()</code> call?</li>
+            <li>For CGPA descending: <code>Double.compare(s2.cgpa, s1.cgpa)</code> — s2 comes first?</li>
+            <li>For ID ascending: <code>Integer.compare(s1.id, s2.id)</code> — s1 comes first?</li>
+            <li>If id is a String field: used <code>Integer.parseInt()</code> inside the comparator?</li>
+            <li><code>compareTo()</code> for Comparable; <code>compare()</code> for Comparator — not mixed up?</li>
+        </ul>
+    </section>
+
+</main>
+
+<script>
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.sidebar a[href^="#"]');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                navLinks.forEach(link => {
+                    link.classList.toggle('active',
+                        link.getAttribute('href') === '#' + entry.target.id
+                    );
+                });
+            }
+        });
+    }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+
+    sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>

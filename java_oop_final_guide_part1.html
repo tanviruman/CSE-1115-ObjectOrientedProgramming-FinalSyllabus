@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSE 1115 — Java OOP Final Exam Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7F5F0;--surface:#FFFFFF;--surface2:#F0EDE6;
+  --border:#E4DFD5;--border-strong:#C8C0B0;
+  --accent:#0369A1;--accent-light:#EFF6FF;--accent-mid:#38BDF8;
+  --accent2:#0D9488;--accent2-light:#F0FDF9;
+  --accent3:#7C3AED;--accent3-light:#F5F3FF;
+  --amber:#B45309;--amber-light:#FFFBEB;
+  --green:#15803D;--green-light:#F0FDF4;
+  --red:#B91C1C;--red-light:#FEF2F2;
+  --text:#2C2A25;--text-dim:#7A7060;--text-bright:#1A1815;--heading:#111009;
+  --code-bg:#1A1728;--code-border:#2D2A40;
+  --kw:#FB7185;--st:#34D399;--cm:#6B7280;--fn:#60A5FA;
+  --cl:#FBBF24;--nm:#F87171;--op:#A78BFA;--ty:#5EEAD4;--an:#C084FC;
+  --sidebar-w:282px;
+}
+html.dark{
+  --bg:#0F0E1A;--surface:#1A1728;--surface2:#22203A;
+  --border:#2D2A40;--border-strong:#403C58;
+  --text:#C8C4BC;--text-dim:#8A8070;--text-bright:#EDE9E0;--heading:#F5F1E8;
+  --accent-light:#0C1A2E;--accent2-light:#0D2420;--accent3-light:#1A1030;
+  --amber-light:#2A1E0A;--green-light:#0A2015;--red-light:#2D1515;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;font-size:15px;line-height:1.78;}
+#scroll-bar{position:fixed;top:0;left:0;right:0;height:2px;background:var(--accent);transform-origin:left;transform:scaleX(0);z-index:9999;transition:transform 0.1s linear;}
+#sidebar{width:var(--sidebar-w);position:fixed;top:0;left:0;bottom:0;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;z-index:100;display:flex;flex-direction:column;}
+#sidebar::-webkit-scrollbar{width:3px;}
+#sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.sb-head{padding:22px 20px 16px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:1;}
+.sb-label{font-family:'Fira Code',monospace;font-size:9px;color:var(--accent-mid);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:5px;}
+.sb-title{font-family:'Instrument Serif',serif;font-size:15px;color:var(--heading);font-weight:400;line-height:1.35;}
+.sb-prog{height:2px;background:var(--border);border-radius:2px;margin-top:12px;overflow:hidden;}
+.sb-prog-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.3s;width:0%;}
+.sb-prog-label{font-size:10px;color:var(--text-dim);margin-top:4px;font-family:'Fira Code',monospace;}
+nav{padding:10px 0;flex:1;}
+.nav-section{padding:6px 20px 2px;font-family:'Fira Code',monospace;font-size:9px;color:var(--text-dim);letter-spacing:0.1em;text-transform:uppercase;margin-top:8px;}
+.nav-link{display:flex;align-items:center;gap:8px;padding:6px 20px;text-decoration:none;color:var(--text-dim);font-size:12.5px;font-weight:400;transition:all 0.15s;border-left:2px solid transparent;}
+.nav-link:hover{color:var(--text-bright);background:var(--surface2);}
+.nav-link.active{color:var(--accent);border-left-color:var(--accent);background:var(--accent-light);}
+.nav-num{font-family:'Fira Code',monospace;font-size:9px;color:var(--border-strong);min-width:18px;}
+.nav-link.active .nav-num{color:var(--accent-mid);}
+.sb-footer{padding:14px 20px;border-top:1px solid var(--border);}
+.theme-btn{background:none;border:1px solid var(--border);color:var(--text-dim);font-family:'Fira Code',monospace;font-size:10px;padding:5px 10px;border-radius:4px;cursor:pointer;transition:all 0.15s;}
+.theme-btn:hover{border-color:var(--accent-mid);color:var(--accent);}
+#main{margin-left:var(--sidebar-w);flex:1;max-width:900px;padding:60px 64px 120px;}
+.hero{margin-bottom:64px;padding-bottom:48px;border-bottom:1px solid var(--border);}
+.hero-eye{font-family:'Fira Code',monospace;font-size:10px;letter-spacing:0.14em;color:var(--text-dim);text-transform:uppercase;margin-bottom:16px;}
+.hero h1{font-family:'Instrument Serif',serif;font-size:46px;color:var(--heading);line-height:1.1;margin-bottom:16px;font-weight:400;}
+.hero h1 em{font-style:italic;color:var(--accent);}
+.hero-sub{font-size:15px;color:var(--text-dim);max-width:520px;line-height:1.72;margin-bottom:24px;}
+.hero-tags{display:flex;gap:8px;flex-wrap:wrap;}
+.tag{font-family:'Fira Code',monospace;font-size:10px;padding:3px 10px;border-radius:3px;background:var(--surface2);border:1px solid var(--border);color:var(--text-dim);}
+.tag.blue{background:var(--accent-light);border-color:#93C5FD;color:var(--accent);}
+.tag.green{background:var(--green-light);border-color:#86EFAC;color:var(--green);}
+.tag.amber{background:var(--amber-light);border-color:#FCD34D;color:var(--amber);}
+.tag.purple{background:var(--accent3-light);border-color:#C4B5FD;color:var(--accent3);}
+.chapter{margin-bottom:72px;padding-top:8px;opacity:0;transform:translateY(16px);transition:opacity 0.5s ease,transform 0.5s ease;}
+.chapter.visible{opacity:1;transform:translateY(0);}
+.ch-eye{font-family:'Fira Code',monospace;font-size:9px;letter-spacing:0.12em;color:var(--text-dim);text-transform:uppercase;margin-bottom:10px;}
+.ch-title{font-family:'Instrument Serif',serif;font-size:32px;color:var(--heading);font-weight:400;margin-bottom:20px;line-height:1.15;}
+.ch-title em{font-style:italic;color:var(--accent);}
+.divider{height:1px;background:var(--border);margin:32px 0;}
+h3{font-size:15px;font-weight:600;color:var(--heading);margin:24px 0 10px;}
+h4{font-size:13px;font-weight:600;color:var(--text-dim);margin:18px 0 8px;text-transform:uppercase;letter-spacing:0.05em;}
+p{margin-bottom:12px;}
+ul,ol{margin:8px 0 12px 20px;}
+li{margin-bottom:4px;}
+strong{font-weight:600;color:var(--text-bright);}
+code{font-family:'Fira Code',monospace;font-size:12.5px;background:var(--surface2);border:1px solid var(--border);padding:1px 5px;border-radius:3px;color:var(--accent);}
+.callout{border-radius:6px;padding:14px 18px;margin:14px 0;border-left:3px solid;}
+.callout-info{background:var(--accent-light);border-color:var(--accent);}
+.callout-info .ci{color:var(--accent);}
+.callout-warn{background:var(--amber-light);border-color:var(--amber);}
+.callout-warn .ci{color:var(--amber);}
+.callout-danger{background:var(--red-light);border-color:var(--red);}
+.callout-danger .ci{color:var(--red);}
+.callout-success{background:var(--green-light);border-color:var(--green);}
+.callout-success .ci{color:var(--green);}
+.callout-purple{background:var(--accent3-light);border-color:var(--accent3);}
+.callout-purple .ci{color:var(--accent3);}
+.callout-label{font-family:'Fira Code',monospace;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;}
+.callout p{margin-bottom:0;}
+.code-block{background:var(--code-bg);border:1px solid var(--code-border);border-radius:8px;overflow:hidden;margin:14px 0;}
+.code-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--code-border);}
+.code-dots{display:flex;gap:6px;}
+.code-dot{width:10px;height:10px;border-radius:50%;}
+.d1{background:#FF5F57;}.d2{background:#FEBC2E;}.d3{background:#28C840;}
+.code-lang{font-family:'Fira Code',monospace;font-size:10px;color:#6B6A80;letter-spacing:0.1em;text-transform:uppercase;}
+.copy-btn{background:none;border:1px solid #3D3A50;color:#6B6A80;font-family:'Fira Code',monospace;font-size:10px;padding:3px 10px;border-radius:3px;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all 0.15s;}
+.copy-btn:hover{border-color:#60A5FA;color:#60A5FA;}
+.copy-btn.copied{border-color:#34D399;color:#34D399;}
+.copy-icon{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:1.5;}
+pre{padding:20px;overflow-x:auto;font-family:'Fira Code',monospace;font-size:13px;line-height:1.72;color:#C8C4BC;}
+pre::-webkit-scrollbar{height:4px;}
+pre::-webkit-scrollbar-thumb{background:var(--code-border);border-radius:2px;}
+.kw{color:#FB7185;}.st{color:#34D399;}.cm{color:#6B7280;font-style:italic;}.fn{color:#60A5FA;}.cl{color:#FBBF24;}.nm{color:#F87171;}.op{color:#A78BFA;}.ty{color:#5EEAD4;}.an{color:#C084FC;}
+.output-box{background:#0D0B17;border:1px solid #2D2A40;border-radius:6px;padding:14px 20px;margin:10px 0;font-family:'Fira Code',monospace;font-size:12.5px;color:#A0F0B0;line-height:1.7;}
+.output-label{font-family:'Fira Code',monospace;font-size:9px;color:#6B6A80;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;}
+.exam-card{border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:18px 0;}
+.exam-card-head{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:var(--surface2);border-bottom:1px solid var(--border);}
+.exam-card-title{font-size:13px;font-weight:600;color:var(--heading);}
+.exam-meta{display:flex;gap:8px;align-items:center;}
+.exam-badge{font-family:'Fira Code',monospace;font-size:10px;padding:2px 8px;border-radius:3px;}
+.marks{background:var(--accent-light);color:var(--accent);border:1px solid #93C5FD;}
+.term{background:var(--accent2-light);color:var(--accent2);border:1px solid #5EEAD4;}
+.term-purple{background:var(--accent3-light);color:var(--accent3);border:1px solid #C4B5FD;}
+.exam-card-body{padding:18px;}
+.step-box{border:1px solid var(--border);border-radius:6px;overflow:hidden;margin:12px 0;}
+.step-row{display:flex;align-items:flex-start;gap:0;border-bottom:1px solid var(--border);}
+.step-row:last-child{border-bottom:none;}
+.step-num{min-width:48px;padding:10px 0 10px 16px;font-family:'Fira Code',monospace;font-size:11px;color:var(--accent);border-right:1px solid var(--border);background:var(--accent-light);display:flex;align-items:flex-start;}
+.step-content{padding:10px 16px;font-size:13.5px;}
+.trace-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px;}
+.trace-table th{background:var(--surface2);padding:8px 12px;text-align:left;border:1px solid var(--border);font-weight:600;font-family:'Fira Code',monospace;font-size:11px;color:var(--text-dim);}
+.trace-table td{padding:7px 12px;border:1px solid var(--border);font-family:'Fira Code',monospace;font-size:12px;vertical-align:top;}
+.trace-table tr:nth-child(even) td{background:var(--surface2);}
+.trace-hl td{background:var(--red-light)!important;color:var(--red);font-weight:600;}
+.trace-ok td{background:var(--green-light)!important;color:var(--green);font-weight:600;}
+.pitfall{background:var(--red-light);border:1px solid #FCA5A5;border-radius:6px;padding:14px 18px;margin:14px 0;}
+.pitfall-head{font-family:'Fira Code',monospace;font-size:10px;color:var(--red);letter-spacing:0.1em;text-transform:uppercase;font-weight:600;margin-bottom:8px;}
+.pitfall ul{margin-left:16px;}
+.pitfall li{margin-bottom:6px;font-size:13.5px;}
+.concept-box{border:1px solid var(--border);border-radius:6px;padding:14px 18px;background:var(--surface);margin:14px 0;}
+.concept-box-title{font-size:11px;font-weight:700;color:var(--accent2);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;}
+.analysis-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0;}
+.analysis-card{border:1px solid var(--border);border-radius:6px;padding:12px 16px;background:var(--surface);text-align:center;}
+.analysis-num{font-family:'Instrument Serif',serif;font-size:30px;color:var(--accent);margin-bottom:2px;}
+.analysis-label{font-size:11px;color:var(--text-dim);}
+.quick-ref-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0;}
+.qr-card{border:1px solid var(--border);border-radius:6px;padding:14px 16px;background:var(--surface);}
+.qr-title{font-family:'Fira Code',monospace;font-size:10px;color:var(--accent2);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;font-weight:600;}
+.strategy-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0;}
+.strategy-card{border:1px solid var(--border);border-radius:6px;padding:14px 16px;background:var(--surface);}
+.strategy-icon{font-size:18px;margin-bottom:6px;}
+.strategy-title{font-size:12px;font-weight:700;color:var(--heading);margin-bottom:4px;}
+.strategy-desc{font-size:12.5px;color:var(--text-dim);}
+.compare-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px;}
+.compare-table th{padding:10px 14px;border:1px solid var(--border);font-weight:600;font-family:'DM Sans',sans-serif;}
+.compare-table td{padding:8px 14px;border:1px solid var(--border);vertical-align:top;}
+.compare-table tr:nth-child(even) td{background:var(--surface2);}
+.compare-table .th-abs{background:var(--amber-light);color:var(--amber);}
+.compare-table .th-int{background:var(--accent3-light);color:var(--accent3);}
+.checklist{list-style:none;margin:12px 0;}
+.checklist li{display:flex;align-items:flex-start;gap:10px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13.5px;}
+.checklist li:last-child{border-bottom:none;}
+.cb{width:16px;height:16px;min-width:16px;border:1.5px solid var(--border-strong);border-radius:3px;cursor:pointer;margin-top:3px;transition:all 0.15s;}
+.cb.checked{background:var(--accent);border-color:var(--accent);}
+.footer{border-top:1px solid var(--border);margin-top:80px;padding:32px 0 0;font-size:13px;color:var(--text-dim);}
+.timer-badge{display:inline-flex;align-items:center;gap:6px;font-family:'Fira Code',monospace;font-size:11px;background:var(--accent-light);border:1px solid #93C5FD;color:var(--accent);padding:4px 12px;border-radius:20px;margin:4px 0;}
+@media(max-width:900px){
+  #sidebar{display:none;}#main{margin-left:0;padding:32px 24px 80px;}
+  .analysis-grid,.strategy-grid,.quick-ref-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div id="scroll-bar"></div>
+
+<aside id="sidebar">
+  <div class="sb-head">
+    <div class="sb-label">CSE 1115 · UIU · Final</div>
+    <div class="sb-title">Java OOP<br>Final Exam Guide</div>
+    <div class="sb-prog"><div class="sb-prog-fill" id="progress-fill"></div></div>
+    <div class="sb-prog-label" id="progress-label">0% complete</div>
+  </div>
+  <nav>
+    <div class="nav-section">Overview</div>
+    <a class="nav-link" href="#analysis"><span class="nav-num">00</span>Exam Analysis</a>
+    <a class="nav-link" href="#strategy"><span class="nav-num">01</span>2-Hour Strategy</a>
+    <div class="nav-section">Abstraction</div>
+    <a class="nav-link" href="#abstract"><span class="nav-num">02</span>Abstract Classes</a>
+    <a class="nav-link" href="#interface"><span class="nav-num">03</span>Interfaces</a>
+    <a class="nav-link" href="#absvint"><span class="nav-num">04</span>Abstract vs Interface</a>
+    <div class="nav-section">Exception Handling</div>
+    <a class="nav-link" href="#exc-basics"><span class="nav-num">05</span>try / catch / finally</a>
+    <a class="nav-link" href="#exc-trace"><span class="nav-num">06</span>Output Tracing</a>
+    <a class="nav-link" href="#exc-custom"><span class="nav-num">07</span>User-Defined Exceptions</a>
+    <a class="nav-link" href="#exc-hierarchy"><span class="nav-num">08</span>Exception Hierarchy</a>
+    <div class="nav-section">Collections & I/O</div>
+    <a class="nav-link" href="#arraylist"><span class="nav-num">09</span>ArrayList</a>
+    <a class="nav-link" href="#fileio"><span class="nav-num">10</span>File I/O</a>
+    <div class="nav-section">Advanced</div>
+    <a class="nav-link" href="#threads"><span class="nav-num">11</span>Threads</a>
+    <a class="nav-link" href="#swing"><span class="nav-num">12</span>Java Swing / GUI</a>
+    <div class="nav-section">Extras</div>
+    <a class="nav-link" href="#quickref"><span class="nav-num">✦</span>Quick Reference</a>
+    <a class="nav-link" href="#checklist"><span class="nav-num">✦</span>Final Checklist</a>
+  </nav>
+  <div class="sb-footer">
+    <button class="theme-btn" onclick="toggleTheme()" id="theme-label">Light mode</button>
+  </div>
+</aside>
+
+<main id="main">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eye">United International University · CSE · Final Exam</div>
+  <h1>Java OOP<br><em>Final Exam Guide</em></h1>
+  <p class="hero-sub">Complete solutions for CSE 1115 final exams — Fall 2025, Summer 2025 &amp; Spring 2025. Covers Abstract Classes, Interfaces, Exceptions, Collections, File I/O, Threads and Swing in one 2-hour study session.</p>
+  <div class="hero-tags">
+    <span class="tag blue">40 Marks · 2 Hours</span>
+    <span class="tag green">5–6 Questions</span>
+    <span class="tag amber">3 Past Finals Analyzed</span>
+    <span class="tag purple">8 Core Topics</span>
+  </div>
+</div>
+
+<!-- ANALYSIS -->
+<section class="chapter" id="analysis">
+  <div class="ch-eye">Section 00</div>
+  <h2 class="ch-title">Final Exam <em>Analysis</em></h2>
+
+  <div class="analysis-grid">
+    <div class="analysis-card"><div class="analysis-num">40</div><div class="analysis-label">Total Marks</div></div>
+    <div class="analysis-card"><div class="analysis-num">5–6</div><div class="analysis-label">Questions (all compulsory)</div></div>
+    <div class="analysis-card"><div class="analysis-num">120</div><div class="analysis-label">Minutes</div></div>
+  </div>
+
+  <h3>Topic-wise Mark Distribution (3 Papers)</h3>
+  <table class="trace-table">
+    <thead><tr><th>Topic</th><th>Fall 2025</th><th>Summer 2025</th><th>Spring 2025</th><th>Total</th></tr></thead>
+    <tbody>
+      <tr><td>Abstract Class / Interface</td><td>6</td><td>6</td><td>5</td><td class="trace-ok"><strong>17</strong></td></tr>
+      <tr><td>Exception Handling (trace + custom)</td><td>9</td><td>8</td><td>10</td><td class="trace-ok"><strong>27</strong></td></tr>
+      <tr><td>ArrayList / Collections</td><td>9</td><td>6</td><td>5</td><td><strong>20</strong></td></tr>
+      <tr><td>File I/O</td><td>8</td><td>6</td><td>10</td><td><strong>24</strong></td></tr>
+      <tr><td>Threads</td><td>8</td><td>6</td><td>—</td><td><strong>14</strong></td></tr>
+      <tr><td>Java Swing / GUI Event Handling</td><td>—</td><td>8</td><td>10</td><td><strong>18</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-danger">
+    <div class="callout-label ci">🔴 Highest Priority</div>
+    <p><strong>Exception Handling appears in EVERY paper for ~25% of marks.</strong> The output-tracing question (6–8 marks) is the single most reliable mark-earner if you master the try/catch/finally flow rules. Study Section 06 first.</p>
+  </div>
+
+  <div class="callout callout-info">
+    <div class="callout-label ci">📋 Question Pattern</div>
+    <p>Q1 is always Abstract/Interface or Exception. Q2–Q4 alternate between Exception traces, File I/O and ArrayList. Q5 (or Q5–Q6) covers Threads and/or Swing. Abstract/Interface is consistently a 6-mark "implement or fix code" question.</p>
+  </div>
+</section>
+
+<!-- STRATEGY -->
+<section class="chapter" id="strategy">
+  <div class="ch-eye">Section 01</div>
+  <h2 class="ch-title">2-Hour <em>Strategy</em></h2>
+
+  <div class="step-box">
+    <div class="step-row"><div class="step-num">0–5 min</div><div class="step-content"><strong>Read all questions, star easy ones.</strong> Abstract/Interface and custom exception questions are usually most predictable — star them first.</div></div>
+    <div class="step-row"><div class="step-num">5–25 min</div><div class="step-content"><strong>Q1 (Abstract/Interface — ~6 marks).</strong> Write interface first, then abstract class, then concrete class. Always write all method bodies even if they're one line.</div></div>
+    <div class="step-row"><div class="step-num">25–50 min</div><div class="step-content"><strong>Exception question (~8–9 marks).</strong> For output tracing: work top-to-bottom, note where each exception propagates. For custom exception: write class + throw + catch.</div></div>
+    <div class="step-row"><div class="step-num">50–80 min</div><div class="step-content"><strong>ArrayList + File I/O (~8–10 marks).</strong> These are code-writing questions. Focus on correct imports, correct method names (Collections.sort, Comparator.comparingDouble etc.).</div></div>
+    <div class="step-row"><div class="step-num">80–110 min</div><div class="step-content"><strong>Threads + Swing (~8 marks).</strong> Threads: write two Runnable/Thread classes, combine in main. Swing: write ActionListener using lambda or implements — one method handles multiple buttons with e.getSource().</div></div>
+    <div class="step-row"><div class="step-num">110–120 min</div><div class="step-content"><strong>Review + fill any blanks.</strong> Check that all imports are written, all method signatures match what the question shows.</div></div>
+  </div>
+
+  <div class="strategy-grid">
+    <div class="strategy-card"><div class="strategy-icon">📦</div><div class="strategy-title">Always Write Imports</div><div class="strategy-desc"><code>import java.util.*;</code> and <code>import java.io.*;</code> at the top. Missing imports = compile error = lost marks.</div></div>
+    <div class="strategy-card"><div class="strategy-icon">🎯</div><div class="strategy-title">Implement ALL Interface Methods</div><div class="strategy-desc">If a class implements an interface but misses one method, the whole class is a compile error. Check every method in every interface.</div></div>
+    <div class="strategy-card"><div class="strategy-icon">🔁</div><div class="strategy-title">Finally ALWAYS Runs</div><div class="strategy-desc">In exception trace questions, <code>finally</code> runs even if an exception propagates upward or a <code>return</code> is hit. This is the #1 tracing trap.</div></div>
+    <div class="strategy-card"><div class="strategy-icon">📄</div><div class="strategy-title">File I/O Pattern</div><div class="strategy-desc">Wrap <code>BufferedReader</code> + <code>BufferedWriter</code> in try-with-resources. Read line by line. Parse the parts you need. Write the new line.</div></div>
+  </div>
+</section>
+
+<!-- ABSTRACT CLASS -->
+<section class="chapter" id="abstract">
+  <div class="ch-eye">Topic 02</div>
+  <h2 class="ch-title"><em>Abstract</em> Classes</h2>
+
+  <div class="concept-box">
+    <div class="concept-box-title">Core Concept</div>
+    <ul>
+      <li>Declared with <code>abstract</code> keyword. <strong>Cannot be instantiated</strong> directly.</li>
+      <li>May contain <strong>abstract methods</strong> (no body) and <strong>concrete methods</strong> (with body).</li>
+      <li>May have <strong>instance variables</strong>, <strong>constructors</strong>, and <strong>static members</strong>.</li>
+      <li>A concrete subclass <strong>must override all abstract methods</strong>, or must also be declared <code>abstract</code>.</li>
+      <li>Use for: common base with some shared implementation, plus enforced overrides.</li>
+    </ul>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div><div class="code-lang">java · abstract class template</div></div>
+<pre><span class="kw">public abstract class</span> <span class="cl">Animal</span> {
+    <span class="ty">String</span> name;             <span class="cm">// instance variable ✓</span>
+
+    <span class="cl">Animal</span>(<span class="ty">String</span> name) {    <span class="cm">// constructor ✓</span>
+        <span class="kw">this</span>.name = name;
+    }
+
+    <span class="kw">public void</span> <span class="fn">eat</span>() {     <span class="cm">// concrete method ✓</span>
+        <span class="cl">System</span>.out.<span class="fn">println</span>(name + <span class="st">" eats"</span>);
+    }
+
+    <span class="kw">public abstract void</span> <span class="fn">makeSound</span>(); <span class="cm">// abstract method — no body!</span>
+}
+
+<span class="kw">class</span> <span class="cl">Bird</span> <span class="kw">extends</span> <span class="cl">Animal</span> {
+    <span class="cl">Bird</span>() { <span class="kw">super</span>(<span class="st">"Bird"</span>); }
+
+    <span class="an">@Override</span>
+    <span class="kw">public void</span> <span class="fn">makeSound</span>() {     <span class="cm">// MUST override</span>
+        <span class="cl">System</span>.out.<span class="fn">println</span>(<span class="st">"Chirp"</span>);
+    }
+}
+
+<span class="cm">// Animal a = new Animal(); ← COMPILE ERROR: cannot instantiate abstract class</span>
+<span class="cl">Animal</span> b = <span class="kw">new</span> <span class="cl">Bird</span>();          <span class="cm">// OK — parent reference, child object</span></pre>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-card-head">
+      <div class="exam-card-title">Fall 2025 Q1(a) — Fix Abstraction.java</div>
+      <div class="exam-meta"><span class="exam-badge marks">2 marks</span><span class="exam-badge term">Fall 2025</span></div>
+    </div>
+    <div class="exam-card-body">
+      <p>The class <code>Abstraction</code> implements <code>I1</code> and <code>I2</code> but does <strong>not</strong> implement <code>m6()</code> from <code>I2</code>. That is the only error.</p>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div><div class="code-lang">java · fix</div></div>
+<pre><span class="kw">class</span> <span class="cl">Abstraction</span> <span class="kw">extends</span> abs <span class="kw">implements</span> I1, I2 {
+    <span class="kw">public void</span> <span class="fn">m1</span>() {}   <span class="cm">// overrides abs.m1()</span>
+    <span class="kw">public void</span> <span class="fn">m2</span>() {}   <span class="cm">// overrides abs.m2()</span>
+    <span class="kw">public void</span> <span class="fn">m3</span>() {}   <span class="cm">// implements I1.m3()</span>
+    <span class="kw">public void</span> <span class="fn">m4</span>() {}   <span class="cm">// implements I1.m4()</span>
+    <span class="kw">public void</span> <span class="fn">m5</span>() {}   <span class="cm">// implements I2.m5()</span>
+    <span class="kw">public void</span> <span class="fn">m6</span>() {}   <span class="cm">// ← ADD THIS: implements I2.m6() (was missing!)</span>
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-card-head">
+      <div class="exam-card-title">Summer 2025 Q1(b) — AbstractFountainPen + FountainPen</div>
+      <div class="exam-meta"><span class="exam-badge marks">4 marks</span><span class="exam-badge term">Summer 2025</span></div>
+    </div>
+    <div class="exam-card-body">
+      <p>FountainPen's constructor calls <code>super(s)</code> — so <code>AbstractFountainPen</code> must have a String constructor. The methods <code>refill()</code> and <code>write()</code> must be implemented somewhere reachable by FountainPen.</p>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div><div class="code-lang">java · solution</div></div>
+<pre><span class="cm">// (a) The combined interface</span>
+<span class="kw">interface</span> <span class="cl">WritableAndRefillable</span> <span class="kw">extends</span> Writable, Refillable {
+    <span class="cm">// inherits write() from Writable and refill(String) from Refillable</span>
+    <span class="cm">// no new methods needed</span>
+}
+
+<span class="cm">// (b) AbstractFountainPen stores the name and implements the methods</span>
+<span class="kw">abstract class</span> <span class="cl">AbstractFountainPen</span> { <span class="cm">// Do not modify this line</span>
+    <span class="kw">protected</span> <span class="ty">String</span> penName;          <span class="cm">// holds "Matador" / "Pentonic"</span>
+
+    <span class="kw">public</span> <span class="cl">AbstractFountainPen</span>(<span class="ty">String</span> s) {
+        <span class="kw">this</span>.penName = s;
+    }
+
+    <span class="kw">public void</span> <span class="fn">refill</span>(<span class="ty">String</span> color) {
+        <span class="cl">System</span>.out.<span class="fn">println</span>(<span class="st">"Refilling "</span> + penName + <span class="st">" with color "</span> + color);
+    }
+
+    <span class="kw">public</span> <span class="ty">String</span> <span class="fn">write</span>() {
+        <span class="kw">return</span> <span class="st">"Writing with "</span> + penName;
+    }
+}
+
+<span class="cm">// FountainPen extends AbstractFountainPen (no changes needed here)</span>
+<span class="kw">class</span> <span class="cl">FountainPen</span> <span class="kw">extends</span> <span class="cl">AbstractFountainPen</span> <span class="kw">implements</span> WritableAndRefillable {
+    <span class="cl">FountainPen</span>(<span class="ty">String</span> s) {
+        <span class="kw">super</span>(s);
+    }
+    <span class="cm">// refill() and write() inherited from AbstractFountainPen</span>
+}</pre>
+      </div>
+      <div class="output-label">Expected Output</div>
+      <div class="output-box">Refilling Matador with color Blue
+Writing with Pentonic</div>
+    </div>
+  </div>
+
+  <div class="pitfall">
+    <div class="pitfall-head">⚠ Common Pitfalls</div>
+    <ul>
+      <li><strong>Trying to instantiate an abstract class:</strong> <code>new AbstractFountainPen("x")</code> → compile error. You can only instantiate concrete subclasses.</li>
+      <li><strong>Abstract method with a body:</strong> <code>abstract void foo() { }</code> → compile error. Abstract methods have no body — not even empty braces.</li>
+      <li><strong>Forgetting to override ALL abstract methods:</strong> If parent has 2 abstract methods and child only overrides 1, the child must be declared <code>abstract</code> too.</li>
+      <li><strong>Abstract class vs Interface confusion:</strong> Abstract classes CAN have constructors, instance variables, and concrete methods. Interfaces (pre-Java 8) cannot.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- INTERFACE -->
+<section class="chapter" id="interface">
+  <div class="ch-eye">Topic 03</div>
+  <h2 class="ch-title"><em>Interfaces</em></h2>
+
+  <div class="concept-box">
+    <div class="concept-box-title">Core Concept</div>
+    <ul>
+      <li>All methods are implicitly <code>public abstract</code>. All fields are implicitly <code>public static final</code>.</li>
+      <li>A class <strong>implements</strong> an interface. An interface <strong>extends</strong> another interface.</li>
+      <li>A class can implement <strong>multiple</strong> interfaces (Java's answer to multiple inheritance).</li>
+      <li>An interface reference can hold any object of any implementing class — polymorphism applies.</li>
+      <li><code>extends</code> always comes <strong>before</strong> <code>implements</code> in a class declaration.</li>
+    </ul>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div><div class="code-lang">java · interface template</div></div>
+<pre><span class="kw">interface</span> <span class="cl">Flyable</span> {
+    <span class="ty">String</span> MEDIA = <span class="st">"Sky"</span>;           <span class="cm">// implicitly public static final</span>
+    <span class="kw">void</span> <span class="fn">fly</span>();                      <span class="cm">// implicitly public abstract</span>
+    <span class="kw">boolean</span> <span class="fn">needFuel</span>();
+}
+
+<span class="kw">interface</span> <span class="cl">Floatable</span> {
+    <span class="kw">void</span> <span class="fn">canFloat</span>();
+}
+
+<span class="cm">// Interface extending two interfaces</span>
+<span class="kw">interface</span> <span class="cl">FlyAndFloat</span> <span class="kw">extends</span> Flyable, Floatable { }
+
+<span class="cm">// Class with extends + implements (extends BEFORE implements)</span>
+<span class="kw">class</span> <span class="cl">Bird</span> <span class="kw">extends</span> <span class="cl">Animal</span> <span class="kw">implements</span> Flyable, Floatable {
+    <span class="an">@Override</span>
+    <span class="kw">public void</span> <span class="fn">fly</span>() { <span class="cl">System</span>.out.<span class="fn">println</span>(<span class="st">"Flying in "</span> + <span class="cl">Flyable</span>.MEDIA); }
+    <span class="an">@Override</span>
+    <span class="kw">public boolean</span> <span class="fn">needFuel</span>() { <span class="kw">return false</span>; }
+    <span class="an">@Override</span>
+    <span class="kw">public void</span> <span class="fn">canFloat</span>() { <span class="cl">System</span>.out.<span class="fn">println</span>(<span class="st">"Floats in air"</span>); }
+}
+
+<span class="cm">// Interface as reference type (polymorphism)</span>
+<span class="cl">Flyable</span> b = <span class="kw">new</span> <span class="cl">Bird</span>();   <span class="cm">// OK — Bird implements Flyable</span>
+b.<span class="fn">fly</span>();                   <span class="cm">// calls Bird.fly() via dynamic dispatch</span></pre>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-card-head">
+      <div class="exam-card-title">Fall 2025 Q1(b) — Square extends Rectangle + draw method</div>
+      <div class="exam-meta"><span class="exam-badge marks">4 marks</span><span class="exam-badge term">Fall 2025</span></div>
+    </div>
+    <div class="exam-card-body">
+      <p>Square extends Rectangle (which implements Shape). Square just needs a single-argument constructor passing the same value as both length and width.</p>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div><div class="code-lang">java · solution</div></div>
+<pre><span class="kw">class</span> <span class="cl">Square</span> <span class="kw">extends</span> <span class="cl">Rectangle</span> {
+    <span class="kw">public</span> <span class="cl">Square</span>(<span class="kw">double</span> side) {
+        <span class="kw">super</span>(side, side);  <span class="cm">// length = width = side, area = side²</span>
+    }
+    <span class="cm">// getArea() is inherited from Rectangle — no override needed</span>
+}
+
+<span class="kw">public class</span> <span class="cl">ShapeTest</span> {
+    <span class="cm">// draw takes any Shape — uses interface reference for polymorphism</span>
+    <span class="kw">public static void</span> <span class="fn">draw</span>(<span class="cl">Shape</span> s) {
+        <span class="cl">System</span>.out.<span class="fn">println</span>(<span class="st">"drawing over "</span> + s.<span class="fn">getArea</span>() + <span class="st">" area"</span>);
+    }
+
+    <span class="kw">public static void</span> <span class="fn">main</span>(<span class="ty">String</span>[] args) {
+        <span class="cl">Shape</span> r = <span class="kw">new</span> <span class="cl">Rectangle</span>(<span class="nm">5</span>, <span class="nm">6</span>);
+        <span class="cl">Shape</span> s = <span class="kw">new</span> <span class="cl">Square</span>(<span class="nm">3</span>);
+        <span class="fn">draw</span>(r);   <span class="cm">// drawing over 30.0 area</span>
+        <span class="fn">draw</span>(s);   <span class="cm">// drawing over 9.0 area</span>
+    }
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-card-head">
+      <div class="exam-card-title">Spring 2025 Q3 — AdvancedComputable + Adder class</div>
+      <div class="exam-meta"><span class="exam-badge marks">5 marks</span><span class="exam-badge term-purple">Spring 2025</span></div>
+    </div>
+    <div class="exam-card-body">
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div><div class="code-lang">java · solution</div></div>
+<pre><span class="cm">// Interface inheriting Computable + adding max()</span>
+<span class="kw">interface</span> <span class="cl">AdvancedComputable</span> <span class="kw">extends</span> <span class="cl">Computable</span> {
+    <span class="kw">int</span> <span class="fn">max</span>(<span class="kw">int</span> a, <span class="kw">int</span> b);
+}
+
+<span class="cm">// Adder extends Processor AND implements AdvancedComputable</span>
+<span class="cm">// extends MUST come before implements</span>
+<span class="kw">class</span> <span class="cl">Adder</span> <span class="kw">extends</span> <span class="cl">Processor</span> <span class="kw">implements</span> <span class="cl">AdvancedComputable</span> {
+
+    <span class="kw">public</span> <span class="cl">Adder</span>(<span class="ty">String</span> id) {
+        <span class="kw">super</span>(id);          <span class="cm">// Processor has String id field</span>
+    }
+
+    <span class="an">@Override</span>
+    <span class="kw">public int</span> <span class="fn">compute</span>(<span class="kw">int</span> a, <span class="kw">int</span> b) {
+        <span class="kw">return</span> a + b;       <span class="cm">// sum of two integers</span>
+    }
+
+    <span class="an">@Override</span>
+    <span class="kw">public int</span> <span class="fn">max</span>(<span class="kw">int</span> a, <span class="kw">int</span> b) {
+        <span class="kw">return</span> (a > b) ? a : b;  <span class="cm">// maximum of two</span>
+    }
+
+    <span class="an">@Override</span>
+    <span class="kw">public void</span> <span class="fn">process</span>() {
+        <span class="cl">System</span>.out.<span class="fn">println</span>(<span class="st">"Processing Addition"</span>);
+    }
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="pitfall">
+    <div class="pitfall-head">⚠ Common Pitfalls</div>
+    <ul>
+      <li><strong><code>implements</code> before <code>extends</code>:</strong> Writing <code>class Bird implements Flyable extends Animal</code> is a compile error. The correct order is <code>extends Animal implements Flyable</code>.</li>
+      <li><strong>Trying to add instance variables to an interface:</strong> <code>interface X { int count = 0; }</code> — this is actually <code>public static final int count = 0</code>. You cannot make it an instance variable.</li>
+      <li><strong>Interface method with missing implementations:</strong> If two interfaces both declare a method with the same signature, the implementing class only needs to provide it once.</li>
+      <li><strong>Interface inheriting multiple interfaces:</strong> Use <code>extends</code> (not <code>implements</code>) with a comma-separated list: <code>interface C extends A, B { }</code>.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ABSTRACT VS INTERFACE -->
+<section class="chapter" id="absvint">
+  <div class="ch-eye">Topic 04</div>
+  <h2 class="ch-title">Abstract vs <em>Interface</em></h2>
+
+  <table class="compare-table">
+    <thead><tr><th class="th-abs">Abstract Class</th><th class="th-int">Interface</th></tr></thead>
+    <tbody>
+      <tr><td>Can have instance variables</td><td>Only <code>public static final</code> fields</td></tr>
+      <tr><td>Can have constructors</td><td>No constructors</td></tr>
+      <tr><td>Can have concrete methods</td><td>All methods implicitly abstract (pre-Java 8)</td></tr>
+      <tr><td>A class can extend <strong>one</strong> abstract class</td><td>A class can implement <strong>many</strong> interfaces</td></tr>
+      <tr><td>Child uses <code>extends</code></td><td>Class uses <code>implements</code>; interface uses <code>extends</code></td></tr>
+      <tr><td>Use when sharing implementation code</td><td>Use when defining a capability contract</td></tr>
+      <tr><td>IS-A relationship (Tiger IS-A Animal)</td><td>CAN-DO relationship (Bird CAN-DO fly)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-success">
+    <div class="callout-label ci">✓ Quick Decision Rule</div>
+    <p>If classes share <strong>implementation code</strong> → use Abstract Class. If unrelated classes just need to <strong>promise a capability</strong> (like Comparable, Runnable, Flyable) → use Interface. An abstract class with ALL abstract methods and no fields is functionally identical to an interface — prefer interface in that case.</p>
+  </div>
+</section>
+
+<!-- EXCEPTION BASICS -->
+<section class="chapter" id="exc-basics">
+  <div class="ch-eye">Topic 05</div>
+  <h2 class="ch-title">try / catch / <em>finally</em></h2>
+
+  <div class="concept-box">
+    <div class="concept-box-title">The 6 Golden Rules of try/catch/finally</div>
+    <ol>
+      <li>If try <strong>succeeds</strong>: skip catch → run finally → continue after try-catch.</li>
+      <li>If try <strong>throws</strong>: skip rest of try → match catch → run finally → continue (if caught).</li>
+      <li><strong>finally ALWAYS runs</strong> — even if there is a return, throw, or break inside try or catch.</li>
+      <li>If catch throws a NEW exception, finally still runs → new exception propagates up.</li>
+      <li>Closest matching catch wins. If exception unhandled at inner level, propagates to outer try.</li>
+      <li>Subclass catch must come <strong>before</strong> superclass catch — otherwise compile error (unreachable catch).</li>
+    </ol>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div><div class="code-lang">java · flow template</div></div>
+<pre><span class="kw">try</span> {
+    <span class="cm">// risky code</span>
+    riskyMethod();                       <span class="cm">// may throw</span>
+    <span class="cl">System</span>.out.<span class="fn">println</span>(<span class="st">"try success"</span>);  <span class="cm">// skipped if exception thrown above</span>
+} <span class="kw">catch</span> (<span class="cl">SpecificException</span> e) {        <span class="cm">// handle specific first</span>
+    <span class="cl">System</span>.out.<span class="fn">println</span>(<span class="st">"specific: "</span> + e.<span class="fn">getMessage</span>());
+} <span class="kw">catch</span> (<span class="cl">Exception</span> e) {               <span class="cm">// general catch — must come last</span>
+    <span class="cl">System</span>.out.<span class="fn">println</span>(<span class="st">"general"</span>);
+} <span class="kw">finally</span> {
+    <span class="cl">System</span>.out.<span class="fn">println</span>(<span class="st">"always runs"</span>); <span class="cm">// ALWAYS executes</span>
+}
+<span class="cl">System</span>.out.<span class="fn">println</span>(<span class="st">"after block"</span>);   <span class="cm">// runs IF exception was caught</span></pre>
+  </div>
+
+  <h3>Spring 2025 Q1(a) — TryCatchExample: 3 Input Cases</h3>
+  <p>Array <code>arr = {"10","0",null}</code>. Outer try wraps integer parse; inner try wraps division.</p>
+
+  <table class="trace-table">
+    <thead><tr><th>Input index</th><th>arr[index]</th><th>parseInt result</th><th>100/value</th><th>Output</th></tr></thead>
+    <tbody>
+      <tr class="trace-ok">
+        <td>0</td><td>"10"</td><td>value=10</td><td>result=10, printed</td>
+        <td style="font-family:'Fira Code',monospace;font-size:11px;color:var(--green)">Result = 10<br>Inner finally block executed.<br>Outer finally block executed.</td>
+      </tr>
+      <tr class="trace-hl">
+        <td>1</td><td>"0"</td><td>value=0</td><td>ArithmeticException (÷0)</td>
+        <td style="font-family:'Fira Code',monospace;font-size:11px;color:var(--red)">Inner catch: ArithmeticException<br>Inner finally block executed.<br>Outer finally block executed.</td>
+      </tr>
+      <tr>
+        <td>2</td><td>null</td><td>NumberFormatException</td><td>never reached</td>
+        <td style="font-family:'Fira Code',monospace;font-size:11px;">Outer catch: NumberFormatException<br>Outer finally block executed.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-warn">
+    <div class="callout-label ci">⚠ Why index=2 prints no inner finally</div>
+    <p><code>Integer.parseInt(null)</code> throws <code>NumberFormatException</code> inside the <strong>outer</strong> try block, before the inner try block is even entered. So the inner <code>finally</code> never runs.</p>
+  </div>
+</section>
+
+<!-- EXCEPTION TRACE -->
+<section class="chapter" id="exc-trace">
+  <div class="ch-eye">Topic 06 — HIGHEST PRIORITY</div>
+  <h2 class="ch-title">Exception Output <em>Tracing</em></h2>
+
+  <div class="callout callout-danger">
+    <div class="callout-label ci">🔴 Exam Alert — 6–9 Marks</div>
+    <p>Exception output tracing appears in EVERY final paper. Use the method-stack mental model: trace from the innermost method outward. For each exception ask: (1) Is there a matching catch at this level? (2) Does finally run here? (3) Does a new exception get thrown from catch?</p>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-card-head">
+      <div class="exam-card-title">Summer 2025 Q2 — Full Nested Exception Trace (8 marks)</div>
+      <div class="exam-meta"><span class="exam-badge marks">8 marks</span><span class="exam-badge term">Summer 2025</span></div>
+    </div>
+    <div class="exam-card-body">
+      <p>Call chain: <code>main → checkB → checkA</code>. Trace step by step:</p>
+      <div class="step-box">
+        <div class="step-row"><div class="step-num">Step 1</div><div class="step-content">println <code>"Main function start"</code>, enter outer try, println <code>"Inside outer try of main"</code>, enter inner try, call <code>checkB()</code>.</div></div>
+        <div class="step-row"><div class="step-num">Step 2</div><div class="step-content"><strong>Inside checkB:</strong> println <code>"Inside checkB"</code>, println <code>"Inside try of checkB"</code>, call <code>checkA()</code>.</div></div>
+        <div class="step-row"><div class="step-num">Step 3</div><div class="step-content"><strong>Inside checkA:</strong> println <code>"Inside checkA"</code>, println <code>"Inside try of checkA"</code>, then <code>arr[5] = 7</code> → <strong>ArrayIndexOutOfBoundsException</strong> thrown.</div></div>
+        <div class="step-row"><div class="step-num">Step 4</div><div class="step-content">checkA has no catch for ArrayIndexOutOfBounds, but has catch for <code>NumberFormatException</code>. This does NOT match. So the AIOOBE skips the NumberFormatException catch. Then <code>finally</code> of checkA runs: println <code>"Inside finally of checkA"</code>. The AIOOBE propagates to checkB.</div></div>
+        <div class="step-row"><div class="step-num">Step 5</div><div class="step-content"><strong>Back in checkB:</strong> AIOOBE matches <code>catch(ArrayIndexOutOfBoundsException e)</code>. println <code>"Exception caught inside catch1 of checkB"</code>. Then throws a NEW <code>ArithmeticException("Thrown from catch1 of checkB")</code>. ArithmeticException propagates to main's inner try.</div></div>
+        <div class="step-row"><div class="step-num">Step 6</div><div class="step-content"><strong>Back in main's inner try:</strong> ArithmeticException matches <code>catch(ArithmeticException e)</code>. println <code>"Exception caught inside inner catch of main: Thrown from catch1 of checkB"</code>. Then inner <code>finally</code> runs: println <code>"Inside inner finally of main"</code>.</div></div>
+        <div class="step-row"><div class="step-num">Step 7</div><div class="step-content">Inner try-catch-finally complete. No unhandled exception. Outer catch is skipped. println <code>"Main function end"</code>.</div></div>
+      </div>
+      <div class="output-label">Final Output</div>
+      <div class="output-box">Main function start
+Inside outer try of main
+Inside checkB
+Inside try of checkB
+Inside checkA
+Inside try of checkA
+Inside finally of checkA
+Exception caught inside catch1 of checkB
+Exception caught inside inner catch of main: Thrown from catch1 of checkB
+Inside inner finally of main
+Main function end</div>
+    </div>
+  </div>
+
+  <div class="pitfall">
+    <div class="pitfall-head">⚠ Tracing Pitfalls</div>
+    <ul>
+      <li><strong>When catch throws a new exception:</strong> The new exception propagates to the CALLER of the current method. The local finally still runs first, then the new exception travels up. The remaining code after the try-catch-finally block does NOT run.</li>
+      <li><strong>ArrayIndexOutOfBoundsException is a RuntimeException</strong> (unchecked). It is NOT caught by <code>catch(NumberFormatException e)</code>. Only exact-match or superclass catches work.</li>
+      <li><strong>After an exception is caught and handled (no re-throw),</strong> execution resumes normally after the entire try-catch-finally block — not where the exception was thrown.</li>
+      <li><strong>Exception at line X in try block:</strong> lines X+1 to the end of try are SKIPPED. The catch runs, then finally.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- CUSTOM EXCEPTION -->
+<section class="chapter" id="exc-custom">
+  <div class="ch-eye">Topic 07</div>
+  <h2 class="ch-title">User-Defined <em>Exceptions</em></h2>
+
+  <div class="concept-box">
+    <div class="concept-box-title">Template — Write Every Time the Same Way</div>
+    <ol>
+      <li>Create a class that <code>extends Exception</code> (or <code>extends RuntimeException</code>).</li>
+      <li>Add constructors that call <code>super(message)</code>.</li>
+      <li>In the method: <code>throws CustomException</code> in signature + <code>throw new CustomException("message")</code> in body.</li>
+      <li>In caller: <code>try { ... } catch(CustomException e) { e.getMessage() }</code>.</li>
+    </ol>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-card-head">
+      <div class="exam-card-title">Fall 2025 Q2 — InvalidBalanceException + checkBalance</div>
+      <div class="exam-meta"><span class="exam-badge marks">9 marks</span><span class="exam-badge term">Fall 2025</span></div>
+    </div>
+    <div class="exam-card-body">
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div><div class="code-lang">java · task (a) + (b)</div></div>
+<pre><span class="cm">// Task A: Custom exception class</span>
+<span class="kw">class</span> <span class="cl">InvalidBalanceException</span> <span class="kw">extends</span> <span class="cl">Exception</span> {
+    <span class="kw">public</span> <span class="cl">InvalidBalanceException</span>(<span class="ty">String</span> message) {
+        <span class="kw">super</span>(message);   <span class="cm">// passes message to Exception</span>
+    }
+}
+
+<span class="cm">// Task B: checkBalance throws InvalidBalanceException if balance &lt; 1000</span>
+<span class="kw">static void</span> <span class="fn">checkBalance</span>(<span class="kw">int</span> balance) <span class="kw">throws</span> <span class="cl">InvalidBalanceException</span> {
+    <span class="kw">if</span> (balance &lt; <span class="nm">1000</span>) {
+        <span class="kw">throw new</span> <span class="cl">InvalidBalanceException</span>(<span class="st">"Insufficient balance."</span>);
+    }
+    <span class="cl">System</span>.out.<span class="fn">println</span>(<span class="st">"Balance verified"</span>); <span class="cm">// do not change this line</span>
+}</pre>
+      </div>
+
+      <h4>Task (c) — Output for each case</h4>
+      <p><strong>Case i: balance = 500</strong></p>
+      <div class="output-box">Connecting ...
+Transaction declined. Insufficient balance.
+Thank you
+Good Goodbye</div>
+      <div class="callout callout-info" style="margin:8px 0;">
+        <div class="callout-label ci">Trace</div>
+        <p>500 is parsed OK (no NumberFormatException). <code>checkBalance(500)</code> → throws <code>InvalidBalanceException</code>. This propagates out of the inner try. The inner catch only handles <code>NumberFormatException</code> — doesn't match. Inner <code>finally</code> runs: "Processing request". Then the outer catch catches <code>InvalidBalanceException</code>: "Transaction declined. Insufficient balance." Outer <code>finally</code>: "Thank you". Then "Good Goodbye".</p>
+      </div>
+      <p><strong>Case ii: balance = abc</strong></p>
+      <div class="output-box">Connecting ...
+Invalid amount entered
+Processing request
+Please wait ...
+Thank you
+Good Goodbye</div>
+      <div class="callout callout-info" style="margin:8px 0;">
+        <div class="callout-label ci">Trace</div>
+        <p><code>Integer.parseInt("abc")</code> throws <code>NumberFormatException</code>. Inner catch catches it: "Invalid amount entered". Inner <code>finally</code>: "Processing request". No unhandled exception → outer catch skipped → "Please wait..." runs → outer <code>finally</code>: "Thank you" → "Good Goodbye".</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-card-head">
+      <div class="exam-card-title">Spring 2025 Q1(b) — InsufficientFundsException + withdraw</div>
+      <div class="exam-meta"><span class="exam-badge marks">6 marks</span><span class="exam-badge term-purple">Spring 2025</span></div>
+    </div>
+    <div class="exam-card-body">
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div><div class="code-lang">java · solution</div></div>
+<pre><span class="cm">// Task 1: Custom exception</span>
+<span class="kw">class</span> <span class="cl">InsufficientFundsException</span> <span class="kw">extends</span> <span class="cl">Exception</span> {
+    <span class="kw">public</span> <span class="cl">InsufficientFundsException</span>(<span class="ty">String</span> message) {
+        <span class="kw">super</span>(message);
+    }
+}
+
+<span class="kw">public class</span> <span class="cl">Bank</span> {
+    <span class="kw">private int</span> balance;
+
+    <span class="kw">public</span> <span class="cl">Bank</span>(<span class="kw">int</span> initialBalance) {
+        <span class="kw">this</span>.balance = initialBalance;
+    }
+
+    <span class="cm">// Task 2: withdraw method</span>
+    <span class="kw">public void</span> <span class="fn">withdraw</span>(<span class="kw">int</span> amount) <span class="kw">throws</span> <span class="cl">InsufficientFundsException</span> {
+        <span class="kw">if</span> (amount > balance) {
+            <span class="kw">throw new</span> <span class="cl">InsufficientFundsException</span>(
+                <span class="st">"Withdrawal amount exceeds current balance."</span>);
+        }
+        balance -= amount;
+        <span class="cl">System</span>.out.<span class="fn">println</span>(<span class="st">"Withdrew: "</span> + amount + <span class="st">". Balance: "</span> + balance);
+    }
+}</pre>
+      </div>
+      <div class="output-label">Output when withdraw(6000) called on balance=5000</div>
+      <div class="output-box">Exception: Withdrawal amount exceeds current balance.
+Transaction processing completed.</div>
+    </div>
+  </div>
+
+  <div class="pitfall">
+    <div class="pitfall-head">⚠ Common Pitfalls</div>
+    <ul>
+      <li><strong>Forgetting <code>throws</code> in method signature:</strong> Any method that throws a checked exception (extends Exception but not RuntimeException) MUST declare <code>throws CustomException</code>. Missing this = compile error.</li>
+      <li><strong>Extending RuntimeException vs Exception:</strong> Subclasses of <code>RuntimeException</code> are unchecked — no need for <code>throws</code> declaration. Subclasses of <code>Exception</code> are checked — must declare. On the exam, always extend <code>Exception</code> unless told otherwise.</li>
+      <li><strong><code>throw</code> vs <code>throws</code>:</strong> <code>throw new Foo()</code> — actually throws it (in method body). <code>throws Foo</code> — declares that the method may throw it (in method signature). Both are needed for checked exceptions.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- EXCEPTION HIERARCHY -->
+<section class="chapter" id="exc-hierarchy">
+  <div class="ch-eye">Topic 08</div>
+  <h2 class="ch-title">Exception <em>Hierarchy</em></h2>
+
+  <div class="quick-ref-grid">
+    <div class="qr-card">
+      <div class="qr-title">Checked Exceptions (must declare/handle)</div>
+      <code>IOException</code><br>
+      <code>FileNotFoundException</code><br>
+      <code>SQLException</code><br>
+      Custom exceptions extending <code>Exception</code>
+    </div>
+    <div class="qr-card">
+      <div class="qr-title">Unchecked — RuntimeException subclasses</div>
+      <code>NullPointerException</code><br>
+      <code>ArrayIndexOutOfBoundsException</code><br>
+      <code>ArithmeticException</code> (÷0)<br>
+      <code>NumberFormatException</code><br>
+      <code>ClassCastException</code><br>
+      <code>IllegalArgumentException</code>
+    </div>
+  </div>
+
+  <div class="callout callout-info">
+    <div class="callout-label ci">📌 Catch Order Rule</div>
+    <p>When catching multiple exceptions, <strong>always put subclass catches before superclass catches</strong>. If you put <code>catch(Exception e)</code> before <code>catch(IOException e)</code>, the compiler gives "unreachable catch block" error because Exception already handles everything.</p>
+  </div>
+</section>
+
+<!-- ARRAYLIST -->
+<section class="chapter" id="arraylist">
+  <div class="ch-eye">Topic 09</div>
+  <h2 class="ch-title"><em>ArrayList</em> &amp; Collections</h2>
+
+  <div class="exam-card">
+    <div class="exam-card-head">
+      <div class="exam-card-title">Fall 2025 Q3 — Student ArrayList: sort, filter, average, remove</div>
+      <div class="exam-meta"><span class="exam-badge marks">9 marks</span><span class="exam-badge term">Fall 2025</span></div>
+    </div>
+    <div class="exam-card-body">
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div><div class="code-lang">java · full solution</div></div>
+<pre><span class="kw">import</span> java.util.*;
+
+<span class="kw">public class</span> <span class="cl">Sections</span> {
+    <span class="kw">public static void</span> <span class="fn">main</span>(<span class="ty">String</span>[] args) {
+
+        <span class="cm">// (a) Create ArrayList</span>
+        <span class="cl">ArrayList</span>&lt;<span class="cl">Student</span>&gt; sectionA = <span class="kw">new</span> <span class="cl">ArrayList</span>&lt;&gt;();
+
+        <span class="cm">// (b) Add students</span>
+        sectionA.<span class="fn">add</span>(<span class="kw">new</span> <span class="cl">Student</span>(<span class="st">"A"</span>, <span class="nm">5</span>,  <span class="nm">3.61</span>));
+        sectionA.<span class="fn">add</span>(<span class="kw">new</span> <span class="cl">Student</span>(<span class="st">"D"</span>, <span class="nm">4</span>,  <span class="nm">3.82</span>));
+        sectionA.<span class="fn">add</span>(<span class="kw">new</span> <span class="cl">Student</span>(<span class="st">"K"</span>, <span class="nm">20</span>, <span class="nm">3.57</span>));
+        sectionA.<span class="fn">add</span>(<span class="kw">new</span> <span class="cl">Student</span>(<span class="st">"M"</span>, <span class="nm">8</span>,  <span class="nm">3.70</span>));
+        sectionA.<span class="fn">add</span>(<span class="kw">new</span> <span class="cl">Student</span>(<span class="st">"L"</span>, <span class="nm">15</span>, <span class="nm">3.45</span>));
+
+        <span class="cm">// (c) Sort descending by CGPA</span>
+        sectionA.<span class="fn">sort</span>(<span class="cl">Comparator</span>.<span class="fn">comparingDouble</span>((Student s) -> s.cgpa).<span class="fn">reversed</span>());
+        <span class="cm">// OR: Collections.sort(sectionA, (a,b) -> Double.compare(b.cgpa, a.cgpa));</span>
+
+        <span class="cm">// (d) Highest, Lowest, Average</span>
+        <span class="kw">double</span> highest = sectionA.<span class="fn">get</span>(<span class="nm">0</span>).cgpa;
+        <span class="kw">double</span> lowest  = sectionA.<span class="fn">get</span>(sectionA.<span class="fn">size</span>() - <span class="nm">1</span>).cgpa;
+        <span class="kw">double</span> sum = <span class="nm">0</span>;
+        <span class="kw">for</span> (<span class="cl">Student</span> s : sectionA) sum += s.cgpa;
+        <span class="kw">double</span> avg = sum / sectionA.<span class="fn">size</span>();
+        <span class="cl">System</span>.out.<span class="fn">println</span>(<span class="st">"Highest: "</span> + highest);
+        <span class="cl">System</span>.out.<span class="fn">println</span>(<span class="st">"Lowest: "</span>  + lowest);
+        <span class="cl">System</span>.out.<span class="fn">println</span>(<span class="st">"Average: "</span> + avg);
+
+        <span class="cm">// (e) Selected: CGPA >= average</span>
+        <span class="cl">ArrayList</span>&lt;<span class="cl">Student</span>&gt; Selected = <span class="kw">new</span> <span class="cl">ArrayList</span>&lt;&gt;();
+        <span class="kw">for</span> (<span class="cl">Student</span> s : sectionA) {
+            <span class="kw">if</span> (s.cgpa >= avg) Selected.<span class="fn">add</span>(s);
+        }
+
+        <span class="cm">// (f) Remove all from sectionA</span>
+        sectionA.<span class="fn">clear</span>();
+
+        <span class="cm">// (g) Print Selected using for-each</span>
+        <span class="kw">for</span> (<span class="cl">Student</span> s : Selected) {
+            <span class="cl">System</span>.out.<span class="fn">println</span>(s.name + <span class="st">" "</span> + s.id + <span class="st">" "</span> + s.cgpa);
+        }
+    }
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-card-head">
+      <div class="exam-card-title">Spring 2025 Q4 — Product ArrayList: insert at index, update, sort by total price</div>
+      <div class="exam-meta"><span class="exam-badge marks">5 marks</span><span class="exam-badge term-purple">Spring 2025</span></div>
+    </div>
+    <div class="exam-card-body">
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div><div class="code-lang">java · solution</div></div>
+<pre><span class="kw">import</span> java.util.*;
+
+<span class="kw">class</span> <span class="cl">ProductList</span> {
+    <span class="kw">public static void</span> <span class="fn">main</span>(<span class="ty">String</span>[] args) {
+
+        <span class="cm">// i. Declare ArrayList</span>
+        <span class="cl">ArrayList</span>&lt;<span class="cl">Product</span>&gt; list = <span class="kw">new</span> <span class="cl">ArrayList</span>&lt;&gt;();
+
+        <span class="cm">// ii. Insert products</span>
+        list.<span class="fn">add</span>(<span class="kw">new</span> <span class="cl">Product</span>(<span class="st">"Mango"</span>,  <span class="nm">5</span>,  <span class="nm">20</span>));
+        list.<span class="fn">add</span>(<span class="kw">new</span> <span class="cl">Product</span>(<span class="st">"Apple"</span>,  <span class="nm">4</span>,  <span class="nm">24</span>));
+        list.<span class="fn">add</span>(<span class="kw">new</span> <span class="cl">Product</span>(<span class="st">"Litchi"</span>, <span class="nm">20</span>, <span class="nm">3</span>));
+
+        <span class="cm">// iii. Insert Banana at index 1</span>
+        list.<span class="fn">add</span>(<span class="nm">1</span>, <span class="kw">new</span> <span class="cl">Product</span>(<span class="st">"Banana"</span>, <span class="nm">10</span>, <span class="nm">12</span>));
+
+        <span class="cm">// iv. Update Apple's unit_price to 30</span>
+        <span class="kw">for</span> (<span class="cl">Product</span> p : list) {
+            <span class="kw">if</span> (p.name.<span class="fn">equals</span>(<span class="st">"Apple"</span>)) { p.unit_price = <span class="nm">30</span>; <span class="kw">break</span>; }
+        }
+
+        <span class="cm">// v. Sort by total price (amount * unit_price) descending</span>
+        list.<span class="fn">sort</span>((a, b) ->
+            <span class="cl">Double</span>.<span class="fn">compare</span>(b.amount * b.unit_price, a.amount * a.unit_price));
+
+        <span class="cm">// Print to verify</span>
+        <span class="kw">for</span> (<span class="cl">Product</span> p : list)
+            <span class="cl">System</span>.out.<span class="fn">println</span>(p.name + <span class="st">": total="</span> + (p.amount * p.unit_price));
+    }
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="pitfall">
+    <div class="pitfall-head">⚠ Common Pitfalls</div>
+    <ul>
+      <li><strong><code>list.add(index, element)</code> vs <code>list.set(index, element)</code>:</strong> <code>add(1, e)</code> inserts at index 1, shifting everything right. <code>set(1, e)</code> replaces the element at index 1.</li>
+      <li><strong>Sorting: <code>(a, b) → Double.compare(b.val, a.val)</code> for descending.</strong> Swapping a and b reverses the order. For ascending use <code>Double.compare(a.val, b.val)</code>.</li>
+      <li><strong>ConcurrentModificationException:</strong> Never call <code>list.remove()</code> inside a for-each loop on the same list. Use an Iterator or build a new list with the desired elements.</li>
+      <li><strong>Comparable vs Comparator:</strong> <code>Comparable</code> is implemented by the class itself (<code>compareTo</code>). <code>Comparator</code> is external logic passed to <code>sort()</code> as a lambda. Use Comparator for on-the-fly sorting logic.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- FILE I/O -->
+<section class="chapter" id="fileio">
+  <div class="ch-eye">Topic 10</div>
+  <h2 class="ch-title">File <em>I/O</em></h2>
+
+  <div class="concept-box">
+    <div class="concept-box-title">Core Pattern — Read + Process + Write</div>
+    <p>Every file I/O question follows this 3-step pattern. The only thing that changes is what "process" means.</p>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div><div class="code-lang">java · file I/O template</div></div>
+<pre><span class="kw">import</span> java.io.*;
+
+<span class="kw">try</span> (<span class="cl">BufferedReader</span> br = <span class="kw">new</span> <span class="cl">BufferedReader</span>(<span class="kw">new</span> <span class="cl">FileReader</span>(<span class="st">"src/input.txt"</span>));
+     <span class="cl">BufferedWriter</span> bw = <span class="kw">new</span> <span class="cl">BufferedWriter</span>(<span class="kw">new</span> <span class="cl">FileWriter</span>(<span class="st">"src/output.txt"</span>))) {
+
+    <span class="ty">String</span> line;
+    <span class="kw">while</span> ((line = br.<span class="fn">readLine</span>()) != <span class="kw">null</span>) {
+        <span class="cm">// process line here</span>
+        <span class="ty">String</span> processed = line; <span class="cm">// ← your logic goes here</span>
+        bw.<span class="fn">write</span>(processed);
+        bw.<span class="fn">newLine</span>();
+    }
+} <span class="kw">catch</span> (<span class="cl">IOException</span> e) {
+    e.<span class="fn">printStackTrace</span>();
+}</pre>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-card-head">
+      <div class="exam-card-title">Fall 2025 Q4 — Fix transaction amounts (subtract 100)</div>
+      <div class="exam-meta"><span class="exam-badge marks">8 marks</span><span class="exam-badge term">Fall 2025</span></div>
+    </div>
+    <div class="exam-card-body">
+      <p>Format: <code>Habib sends Labib : 1200</code>. Split on <code>" : "</code>, subtract 100 from amount, write new line.</p>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div><div class="code-lang">java · solution</div></div>
+<pre><span class="kw">import</span> java.io.*;
+
+<span class="kw">public class</span> <span class="cl">FixTransactions</span> {
+    <span class="kw">public static void</span> <span class="fn">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">String</span> inputFile  = <span class="st">"src/transactions.txt"</span>;
+        <span class="ty">String</span> outputFile = <span class="st">"src/transactions_updated.txt"</span>;
+
+        <span class="kw">try</span> (<span class="cl">BufferedReader</span> br = <span class="kw">new</span> <span class="cl">BufferedReader</span>(<span class="kw">new</span> <span class="cl">FileReader</span>(inputFile));
+             <span class="cl">BufferedWriter</span> bw = <span class="kw">new</span> <span class="cl">BufferedWriter</span>(<span class="kw">new</span> <span class="cl">FileWriter</span>(outputFile))) {
+
+            <span class="ty">String</span> line;
+            <span class="kw">while</span> ((line = br.<span class="fn">readLine</span>()) != <span class="kw">null</span>) {
+                <span class="cm">// Split on " : " to separate transaction text from amount</span>
+                <span class="ty">String</span>[] parts = line.<span class="fn">split</span>(<span class="st">" : "</span>);
+                <span class="ty">String</span> senderReceiver = parts[<span class="nm">0</span>];       <span class="cm">// "Habib sends Labib"</span>
+                <span class="kw">int</span>    amount          = <span class="cl">Integer</span>.<span class="fn">parseInt</span>(parts[<span class="nm">1</span>].<span class="fn">trim</span>());
+                <span class="kw">int</span>    corrected       = amount - <span class="nm">100</span>;
+
+                bw.<span class="fn">write</span>(senderReceiver + <span class="st">" : "</span> + corrected);
+                bw.<span class="fn">newLine</span>();
+            }
+            <span class="cl">System</span>.out.<span class="fn">println</span>(<span class="st">"Done. transactions_updated.txt created."</span>);
+
+        } <span class="kw">catch</span> (<span class="cl">IOException</span> e) {
+            e.<span class="fn">printStackTrace</span>();
+        }
+    }
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-card-head">
+      <div class="exam-card-title">Spring 2025 Q2 — Split student.txt into info.txt and mark.txt</div>
+      <div class="exam-meta"><span class="exam-badge marks">10 marks</span><span class="exam-badge term-purple">Spring 2025</span></div>
+    </div>
+    <div class="exam-card-body">
+      <p>Read <code>701 Rabbi 15 12</code> → write <code>701 Rabbi</code> to info.txt, <code>Rabbi 27</code> to mark.txt.</p>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div><div class="code-lang">java · solution</div></div>
+<pre><span class="kw">import</span> java.io.*;
+
+<span class="kw">public class</span> <span class="cl">SplitStudentFile</span> {
+    <span class="kw">public static void</span> <span class="fn">main</span>(<span class="ty">String</span>[] args) {
+        <span class="kw">try</span> (<span class="cl">BufferedReader</span> br = <span class="kw">new</span> <span class="cl">BufferedReader</span>(<span class="kw">new</span> <span class="cl">FileReader</span>(<span class="st">"src/student.txt"</span>));
+             <span class="cl">BufferedWriter</span> infoW = <span class="kw">new</span> <span class="cl">BufferedWriter</span>(<span class="kw">new</span> <span class="cl">FileWriter</span>(<span class="st">"src/info.txt"</span>));
+             <span class="cl">BufferedWriter</span> markW = <span class="kw">new</span> <span class="cl">BufferedWriter</span>(<span class="kw">new</span> <span class="cl">FileWriter</span>(<span class="st">"src/mark.txt"</span>))) {
+
+            <span class="ty">String</span> line;
+            <span class="kw">while</span> ((line = br.<span class="fn">readLine</span>()) != <span class="kw">null</span>) {
+                <span class="ty">String</span>[] parts = line.<span class="fn">split</span>(<span class="st">" "</span>);   <span class="cm">// ["701","Rabbi","15","12"]</span>
+                <span class="ty">String</span> id    = parts[<span class="nm">0</span>];
+                <span class="ty">String</span> name  = parts[<span class="nm">1</span>];
+                <span class="kw">int</span>    mark1 = <span class="cl">Integer</span>.<span class="fn">parseInt</span>(parts[<span class="nm">2</span>]);
+                <span class="kw">int</span>    mark2 = <span class="cl">Integer</span>.<span class="fn">parseInt</span>(parts[<span class="nm">3</span>]);
+
+                infoW.<span class="fn">write</span>(id + <span class="st">" "</span> + name);  infoW.<span class="fn">newLine</span>();
+                markW.<span class="fn">write</span>(name + <span class="st">" "</span> + (mark1 + mark2)); markW.<span class="fn">newLine</span>();
+            }
+        } <span class="kw">catch</span> (<span class="cl">IOException</span> e) {
+            e.<span class="fn">printStackTrace</span>();
+        }
+    }
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="pitfall">
+    <div class="pitfall-head">⚠ Common Pitfalls</div>
+    <ul>
+      <li><strong>File path: use <code>"src/filename.txt"</code> not just <code>"filename.txt"</code></strong> — the question says "located inside the src folder."</li>
+      <li><strong>Forgetting <code>bw.newLine()</code>:</strong> Without this, all output appears on one line.</li>
+      <li><strong><code>trim()</code> before parseInt:</strong> Lines may have trailing spaces. Always <code>parts[i].trim()</code> before parsing numbers.</li>
+      <li><strong>Try-with-resources auto-closes streams</strong> — no need to call <code>br.close()</code> or <code>bw.close()</code> explicitly when using <code>try(...)</code> syntax.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- THREADS -->
+<section class="chapter" id="threads">
+  <div class="ch-eye">Topic 11</div>
+  <h2 class="ch-title"><em>Threads</em></h2>
+
+  <div class="concept-box">
+    <div class="concept-box-title">Core Pattern — Every Thread Question</div>
+    <ol>
+      <li>Create a class implementing <code>Runnable</code> (preferred) or extending <code>Thread</code>.</li>
+      <li>Put the computation in <code>run()</code>. Store result in an instance field.</li>
+      <li>In main: create threads, call <code>start()</code>, call <code>join()</code> to wait, then combine results.</li>
+    </ol>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-card-head">
+      <div class="exam-card-title">Fall 2025 Q5 — Series sum S = 1¹ − 2² + 3³ − ... using 2 threads</div>
+      <div class="exam-meta"><span class="exam-badge marks">8 marks</span><span class="exam-badge term">Fall 2025</span></div>
+    </div>
+    <div class="exam-card-body">
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div><div class="code-lang">java · solution</div></div>
+<pre><span class="kw">import</span> java.util.Scanner;
+
+<span class="cm">// Thread 1: odd bases (1, 3, 5, ...) — positive terms</span>
+<span class="kw">class</span> <span class="cl">OddThread</span> <span class="kw">implements</span> <span class="cl">Runnable</span> {
+    <span class="kw">private int</span> n;
+    <span class="kw">public double</span> result = <span class="nm">0</span>;
+
+    <span class="kw">public</span> <span class="cl">OddThread</span>(<span class="kw">int</span> n) { <span class="kw">this</span>.n = n; }
+
+    <span class="an">@Override</span>
+    <span class="kw">public void</span> <span class="fn">run</span>() {
+        <span class="kw">for</span> (<span class="kw">int</span> i = <span class="nm">1</span>; i &lt;= n; i += <span class="nm">2</span>) {    <span class="cm">// i = 1, 3, 5, ...</span>
+            result += <span class="cl">Math</span>.<span class="fn">pow</span>(i, i);           <span class="cm">// +i^i</span>
+        }
+    }
+}
+
+<span class="cm">// Thread 2: even bases (2, 4, 6, ...) — negative terms</span>
+<span class="kw">class</span> <span class="cl">EvenThread</span> <span class="kw">implements</span> <span class="cl">Runnable</span> {
+    <span class="kw">private int</span> n;
+    <span class="kw">public double</span> result = <span class="nm">0</span>;
+
+    <span class="kw">public</span> <span class="cl">EvenThread</span>(<span class="kw">int</span> n) { <span class="kw">this</span>.n = n; }
+
+    <span class="an">@Override</span>
+    <span class="kw">public void</span> <span class="fn">run</span>() {
+        <span class="kw">for</span> (<span class="kw">int</span> i = <span class="nm">2</span>; i &lt;= n; i += <span class="nm">2</span>) {    <span class="cm">// i = 2, 4, 6, ...</span>
+            result += <span class="cl">Math</span>.<span class="fn">pow</span>(i, i);           <span class="cm">// subtracted later</span>
+        }
+    }
+}
+
+<span class="kw">public class</span> <span class="cl">SeriesSum</span> {
+    <span class="kw">public static void</span> <span class="fn">main</span>(<span class="ty">String</span>[] args) <span class="kw">throws</span> <span class="cl">InterruptedException</span> {
+        <span class="cl">Scanner</span> sc = <span class="kw">new</span> <span class="cl">Scanner</span>(<span class="cl">System</span>.in);
+        <span class="kw">int</span> n = sc.<span class="fn">nextInt</span>();   <span class="cm">// must be even</span>
+
+        <span class="cl">OddThread</span> odd  = <span class="kw">new</span> <span class="cl">OddThread</span>(n);
+        <span class="cl">EvenThread</span> even = <span class="kw">new</span> <span class="cl">EvenThread</span>(n);
+
+        <span class="cl">Thread</span> t1 = <span class="kw">new</span> <span class="cl">Thread</span>(odd);
+        <span class="cl">Thread</span> t2 = <span class="kw">new</span> <span class="cl">Thread</span>(even);
+
+        t1.<span class="fn">start</span>();   <span class="cm">// starts Thread 1</span>
+        t2.<span class="fn">start</span>();   <span class="cm">// starts Thread 2</span>
+        t1.<span class="fn">join</span>();    <span class="cm">// main waits for t1 to finish</span>
+        t2.<span class="fn">join</span>();    <span class="cm">// main waits for t2 to finish</span>
+
+        <span class="kw">double</span> totalSum = odd.result - even.result;   <span class="cm">// combine: odd adds, even subtracts</span>
+        <span class="cl">System</span>.out.<span class="fn">println</span>(<span class="st">"Total sum S = "</span> + totalSum);
+    }
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-card-head">
+      <div class="exam-card-title">Summer 2025 Q6 — n! using 2 threads (1 to n/2 and n/2+1 to n)</div>
+      <div class="exam-meta"><span class="exam-badge marks">6 marks</span><span class="exam-badge term">Summer 2025</span></div>
+    </div>
+    <div class="exam-card-body">
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div><div class="code-lang">java · solution</div></div>
+<pre><span class="kw">class</span> <span class="cl">FactThread</span> <span class="kw">implements</span> <span class="cl">Runnable</span> {
+    <span class="kw">private int</span> start, end;
+    <span class="kw">public long</span> result = <span class="nm">1</span>;   <span class="cm">// multiplicative identity</span>
+
+    <span class="kw">public</span> <span class="cl">FactThread</span>(<span class="kw">int</span> start, <span class="kw">int</span> end) {
+        <span class="kw">this</span>.start = start;
+        <span class="kw">this</span>.end   = end;
+    }
+
+    <span class="an">@Override</span>
+    <span class="kw">public void</span> <span class="fn">run</span>() {
+        <span class="kw">for</span> (<span class="kw">int</span> i = start; i &lt;= end; i++) result *= i;
+    }
+}
+
+<span class="kw">public class</span> <span class="cl">FactorialThreads</span> {
+    <span class="kw">public static void</span> <span class="fn">main</span>(<span class="ty">String</span>[] args) <span class="kw">throws</span> <span class="cl">InterruptedException</span> {
+        <span class="kw">int</span> n = <span class="kw">new</span> <span class="cl">java.util.Scanner</span>(<span class="cl">System</span>.in).<span class="fn">nextInt</span>();
+
+        <span class="cl">FactThread</span> f1 = <span class="kw">new</span> <span class="cl">FactThread</span>(<span class="nm">1</span>,     n/<span class="nm">2</span>);
+        <span class="cl">FactThread</span> f2 = <span class="kw">new</span> <span class="cl">FactThread</span>(n/<span class="nm">2</span>+<span class="nm">1</span>, n);
+
+        <span class="cl">Thread</span> t1 = <span class="kw">new</span> <span class="cl">Thread</span>(f1);
+        <span class="cl">Thread</span> t2 = <span class="kw">new</span> <span class="cl">Thread</span>(f2);
+        t1.<span class="fn">start</span>(); t2.<span class="fn">start</span>();
+        t1.<span class="fn">join</span>();  t2.<span class="fn">join</span>();
+
+        <span class="kw">long</span> factorial = f1.result * f2.result;
+        <span class="cl">System</span>.out.<span class="fn">println</span>(n + <span class="st">"! = "</span> + factorial);
+    }
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="pitfall">
+    <div class="pitfall-head">⚠ Common Pitfalls</div>
+    <ul>
+      <li><strong>Calling <code>run()</code> instead of <code>start()</code>:</strong> <code>t.run()</code> runs the code on the MAIN thread (no concurrency). <code>t.start()</code> creates a new thread and runs <code>run()</code> on it.</li>
+      <li><strong>Forgetting <code>join()</code>:</strong> Without <code>t1.join(); t2.join();</code>, main may combine results before threads finish, giving wrong answers.</li>
+      <li><strong>main must declare <code>throws InterruptedException</code></strong> when using <code>join()</code>, or wrap it in a try-catch.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- SWING -->
+<section class="chapter" id="swing">
+  <div class="ch-eye">Topic 12</div>
+  <h2 class="ch-title">Java Swing / <em>GUI Event Handling</em></h2>
+
+  <div class="concept-box">
+    <div class="concept-box-title">Core Pattern — Event Handling</div>
+    <p>Every GUI question asks you to write event handling code. The pattern is the same every time:</p>
+    <ol>
+      <li>Use a lambda: <code>button.addActionListener(e -> { ... });</code></li>
+      <li>Or implement <code>ActionListener</code>: class implements <code>ActionListener</code>, override <code>actionPerformed(ActionEvent e)</code>.</li>
+      <li>To handle multiple buttons in ONE method: use <code>e.getSource() == buttonName</code>.</li>
+    </ol>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-card-head">
+      <div class="exam-card-title">Summer 2025 Q3 — Word Count Guessing Game (one method for both buttons)</div>
+      <div class="exam-meta"><span class="exam-badge marks">8 marks</span><span class="exam-badge term">Summer 2025</span></div>
+    </div>
+    <div class="exam-card-body">
+      <p>B1 (Submit) stores P1's sentence. B2 (Guess) checks if P2's guess matches word count. ONE method handles both — use <code>e.getSource()</code>.</p>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div><div class="code-lang">java · event handling solution</div></div>
+<pre><span class="cm">// Assume: T1, T2 (JTextFields), B1, B2 (JButtons), L1 (JLabel) already created</span>
+<span class="cm">// We need ONE method to handle both buttons → implement ActionListener</span>
+
+<span class="kw">import</span> java.awt.event.*;
+<span class="kw">import</span> javax.swing.*;
+
+<span class="cm">// Declare at class/field level:</span>
+<span class="ty">String</span> sentence = <span class="st">""</span>;   <span class="cm">// stores Player 1's sentence</span>
+
+<span class="cm">// Register SAME handler for both buttons:</span>
+<span class="cl">ActionListener</span> handler = <span class="kw">new</span> <span class="cl">ActionListener</span>() {
+    <span class="an">@Override</span>
+    <span class="kw">public void</span> <span class="fn">actionPerformed</span>(<span class="cl">ActionEvent</span> e) {
+        <span class="kw">if</span> (e.<span class="fn">getSource</span>() == B1) {
+            <span class="cm">// B1 (Submit): save Player 1's sentence</span>
+            sentence = T1.<span class="fn">getText</span>();
+            T1.<span class="fn">setText</span>(<span class="st">""</span>);   <span class="cm">// optional: clear after submit</span>
+        } <span class="kw">else if</span> (e.<span class="fn">getSource</span>() == B2) {
+            <span class="cm">// B2 (Guess): check Player 2's word count guess</span>
+            <span class="kw">int</span> actualWords = sentence.<span class="fn">trim</span>().<span class="fn">split</span>(<span class="st">"\\s+"</span>).length;
+            <span class="kw">int</span> guess;
+            <span class="kw">try</span> {
+                guess = <span class="cl">Integer</span>.<span class="fn">parseInt</span>(T2.<span class="fn">getText</span>().<span class="fn">trim</span>());
+            } <span class="kw">catch</span> (<span class="cl">NumberFormatException</span> ex) {
+                L1.<span class="fn">setText</span>(<span class="st">"Please enter a valid number"</span>);
+                <span class="kw">return</span>;
+            }
+            <span class="kw">if</span> (guess == actualWords) {
+                L1.<span class="fn">setText</span>(<span class="st">"Player 2 wins"</span>);
+            } <span class="kw">else</span> {
+                L1.<span class="fn">setText</span>(<span class="st">"Player 1 wins"</span>);
+            }
+        }
+    }
+};
+B1.<span class="fn">addActionListener</span>(handler);
+B2.<span class="fn">addActionListener</span>(handler);   <span class="cm">// SAME handler for both</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-card-head">
+      <div class="exam-card-title">Spring 2025 Q5 — Rock Paper Scissors (3 buttons)</div>
+      <div class="exam-meta"><span class="exam-badge marks">10 marks</span><span class="exam-badge term-purple">Spring 2025</span></div>
+    </div>
+    <div class="exam-card-body">
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div><div class="code-lang">java · event handling solution</div></div>
+<pre><span class="cm">// Write only the event-handling code (components already declared)</span>
+leftButton.<span class="fn">addActionListener</span>(e -> {
+    label1.<span class="fn">setText</span>(<span class="fn">getRandomChoice</span>());  <span class="cm">// Player 1 gets a random choice</span>
+});
+
+rightButton.<span class="fn">addActionListener</span>(e -> {
+    label2.<span class="fn">setText</span>(<span class="fn">getRandomChoice</span>());  <span class="cm">// Player 2 gets a random choice</span>
+});
+
+checkButton.<span class="fn">addActionListener</span>(e -> {
+    <span class="ty">String</span> p1 = label1.<span class="fn">getText</span>();
+    <span class="ty">String</span> p2 = label2.<span class="fn">getText</span>();
+
+    <span class="kw">if</span> (p1.<span class="fn">equals</span>(p2)) {
+        resultLabel.<span class="fn">setText</span>(<span class="st">"Draw"</span>);
+    } <span class="kw">else if</span> (
+        (p1.<span class="fn">equals</span>(<span class="st">"Rock"</span>)     && p2.<span class="fn">equals</span>(<span class="st">"Scissors"</span>)) ||
+        (p1.<span class="fn">equals</span>(<span class="st">"Paper"</span>)    && p2.<span class="fn">equals</span>(<span class="st">"Rock"</span>))     ||
+        (p1.<span class="fn">equals</span>(<span class="st">"Scissors"</span>) && p2.<span class="fn">equals</span>(<span class="st">"Paper"</span>))
+    ) {
+        resultLabel.<span class="fn">setText</span>(<span class="st">"Player 1 Wins!"</span>);
+    } <span class="kw">else</span> {
+        resultLabel.<span class="fn">setText</span>(<span class="st">"Player 2 Wins!"</span>);
+    }
+});</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="pitfall">
+    <div class="pitfall-head">⚠ Common Pitfalls</div>
+    <ul>
+      <li><strong>One method for multiple buttons:</strong> The question says "use only one method." Use a single <code>ActionListener</code> registered to both buttons, with <code>e.getSource() == buttonRef</code> inside to distinguish.</li>
+      <li><strong><code>getText()</code> returns a String — always <code>trim()</code> first</strong> to handle accidental spaces entered by the user before parsing with <code>Integer.parseInt()</code>.</li>
+      <li><strong>Lambda vs anonymous class:</strong> Both are valid. Lambda <code>btn.addActionListener(e -> {...})</code> is shorter. Anonymous class is more explicit. Either earns full marks.</li>
+      <li><strong>Split on whitespace:</strong> <code>sentence.split("\\s+")</code> handles multiple spaces between words. <code>split(" ")</code> would create empty strings for multiple consecutive spaces.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- QUICK REFERENCE -->
+<section class="chapter" id="quickref">
+  <div class="ch-eye">Quick Reference</div>
+  <h2 class="ch-title">Exam-Day <em>Cheat Sheet</em></h2>
+
+  <div class="quick-ref-grid">
+    <div class="qr-card">
+      <div class="qr-title">Custom Exception Template</div>
+      <code>class MyEx extends Exception {</code><br>
+      <code>&nbsp;&nbsp;MyEx(String msg){ super(msg); }</code><br>
+      <code>}</code><br>
+      Method: <code>throws MyEx</code> in signature<br>
+      Body: <code>throw new MyEx("msg");</code>
+    </div>
+    <div class="qr-card">
+      <div class="qr-title">File I/O Template</div>
+      <code>try(BufferedReader br = new BufferedReader(</code><br>
+      <code>&nbsp;&nbsp;new FileReader("src/file.txt"));</code><br>
+      <code>BufferedWriter bw = new BufferedWriter(</code><br>
+      <code>&nbsp;&nbsp;new FileWriter("src/out.txt"))) {</code><br>
+      <code>&nbsp;&nbsp;String line; while((line=br.readLine())!=null){...}</code><br>
+      <code>}</code>
+    </div>
+    <div class="qr-card">
+      <div class="qr-title">Thread Template</div>
+      <code>class T implements Runnable {</code><br>
+      <code>&nbsp;&nbsp;long result=1; int s,e;</code><br>
+      <code>&nbsp;&nbsp;T(int s,int e){this.s=s;this.e=e;}</code><br>
+      <code>&nbsp;&nbsp;public void run(){for(int i=s;i&lt;=e;i++)...}</code><br>
+      <code>}</code><br>
+      Main: <code>t.start(); t.join();</code>
+    </div>
+    <div class="qr-card">
+      <div class="qr-title">ArrayList Sort (lambda)</div>
+      Descending: <code>list.sort((a,b)->Double.compare(b.v,a.v))</code><br>
+      Ascending: <code>list.sort((a,b)->Double.compare(a.v,b.v))</code><br>
+      With Comparator: <code>Comparator.comparingDouble(x->x.cgpa).reversed()</code>
+    </div>
+    <div class="qr-card">
+      <div class="qr-title">Interface Rule Summary</div>
+      Extends: BEFORE implements<br>
+      Interface extends: uses <code>extends</code><br>
+      Class implements: uses <code>implements</code><br>
+      All methods: <code>public abstract</code> implicitly<br>
+      All fields: <code>public static final</code> implicitly
+    </div>
+    <div class="qr-card">
+      <div class="qr-title">finally Always Runs When...</div>
+      ✓ try succeeds<br>
+      ✓ catch runs<br>
+      ✓ catch throws new exception<br>
+      ✓ try/catch has return<br>
+      ✓ Propagated exception
+    </div>
+    <div class="qr-card">
+      <div class="qr-title">Abstract vs Interface</div>
+      Abstract: can have fields, constructor, concrete methods<br>
+      Interface: only public static final fields, all methods abstract<br>
+      Class extends ONE abstract class<br>
+      Class implements MANY interfaces
+    </div>
+    <div class="qr-card">
+      <div class="qr-title">GUI One-Method Pattern</div>
+      <code>ActionListener h = e -> {</code><br>
+      <code>&nbsp;&nbsp;if(e.getSource()==B1){ ... }</code><br>
+      <code>&nbsp;&nbsp;else if(e.getSource()==B2){ ... }</code><br>
+      <code>};</code><br>
+      <code>B1.addActionListener(h);</code><br>
+      <code>B2.addActionListener(h);</code>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <h3>Critical Imports to Always Write</h3>
+  <div class="code-block">
+    <div class="code-header"><div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div><div class="code-lang">java · import cheat sheet</div></div>
+<pre><span class="kw">import</span> java.util.*;           <span class="cm">// ArrayList, Scanner, Collections, Comparator</span>
+<span class="kw">import</span> java.io.*;             <span class="cm">// BufferedReader, FileReader, BufferedWriter, FileWriter, IOException</span>
+<span class="kw">import</span> java.awt.event.*;      <span class="cm">// ActionListener, ActionEvent</span>
+<span class="kw">import</span> javax.swing.*;         <span class="cm">// JFrame, JButton, JLabel, JTextField</span></pre>
+  </div>
+</section>
+
+<!-- CHECKLIST -->
+<section class="chapter" id="checklist">
+  <div class="ch-eye">Final Checklist</div>
+  <h2 class="ch-title">Are You <em>Ready?</em></h2>
+
+  <ul class="checklist">
+    <li><div class="cb" onclick="toggleCheck(this)"></div>I can write an abstract class with instance variables, constructor, concrete methods, and abstract methods.</li>
+    <li><div class="cb" onclick="toggleCheck(this)"></div>I can write an interface that extends multiple interfaces, and a class that extends + implements.</li>
+    <li><div class="cb" onclick="toggleCheck(this)"></div>I know: <code>extends</code> comes before <code>implements</code>, and interface fields are <code>public static final</code>.</li>
+    <li><div class="cb" onclick="toggleCheck(this)"></div>I can trace exception flow through nested try-catch-finally blocks and method call stacks.</li>
+    <li><div class="cb" onclick="toggleCheck(this)"></div>I know that <code>finally</code> ALWAYS runs, even when an exception propagates or catch re-throws.</li>
+    <li><div class="cb" onclick="toggleCheck(this)"></div>I can write a custom exception class, throw it with a message, and catch it correctly.</li>
+    <li><div class="cb" onclick="toggleCheck(this)"></div>I can implement ArrayList operations: sort (lambda comparator), filter loop, clear, add at index.</li>
+    <li><div class="cb" onclick="toggleCheck(this)"></div>I can read a text file line by line, parse fields with <code>split()</code> and <code>parseInt()</code>, write output to a new file.</li>
+    <li><div class="cb" onclick="toggleCheck(this)"></div>I can write two Thread classes (implementing Runnable), start them, join them, and combine results.</li>
+    <li><div class="cb" onclick="toggleCheck(this)"></div>I can write event handling for multiple buttons using one ActionListener with <code>e.getSource()</code>.</li>
+    <li><div class="cb" onclick="toggleCheck(this)"></div>I always write <code>import java.util.*; import java.io.*;</code> at the top of every answer.</li>
+    <li><div class="cb" onclick="toggleCheck(this)"></div>I always write <code>@Override</code> when overriding abstract methods.</li>
+  </ul>
+
+  <div class="callout callout-success" style="margin-top:24px;">
+    <div class="callout-label ci">✓ Two-Hour Study Plan</div>
+    <p>Hour 1: Study Topics 02–08 (Abstract, Interface, Exceptions). Trace the Summer 2025 Q2 exception question without looking at the answer. Hour 2: Study Topics 09–12 (ArrayList, File I/O, Threads, Swing). Write the Fall 2025 Q3 ArrayList solution from scratch. If you can do both, you are fully prepared. Good luck!</p>
+  </div>
+
+  <div class="footer">
+    <div>CSE 1115 · Object Oriented Programming — Final Exam Preparation Guide</div>
+    <div style="margin-top:4px;color:var(--text-dim);">United International University · Fall 2025, Summer 2025, Spring 2025</div>
+  </div>
+</section>
+
+</main>
+
+<script>
+const scrollBar=document.getElementById('scroll-bar');
+const progressFill=document.getElementById('progress-fill');
+const progressLabel=document.getElementById('progress-label');
+window.addEventListener('scroll',()=>{
+  const max=document.body.scrollHeight-window.innerHeight;
+  const pct=Math.round((window.scrollY/max)*100);
+  scrollBar.style.transform=`scaleX(${pct/100})`;
+  progressFill.style.width=pct+'%';
+  progressLabel.textContent=pct+'% complete';
+  updateNav();
+});
+const chapters=document.querySelectorAll('.chapter');
+const navLinks=document.querySelectorAll('.nav-link');
+function updateNav(){
+  let cur='';
+  chapters.forEach(ch=>{if(window.scrollY>=ch.offsetTop-140)cur=ch.id;});
+  navLinks.forEach(l=>{l.classList.toggle('active',l.getAttribute('href')==='#'+cur);});
+}
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.04});
+chapters.forEach(ch=>obs.observe(ch));
+const cpI=`<svg class="copy-icon" viewBox="0 0 16 16"><rect x="5" y="5" width="9" height="9" rx="1.5"/><path d="M11 5V3.5A1.5 1.5 0 0 0 9.5 2H3.5A1.5 1.5 0 0 0 2 3.5v6A1.5 1.5 0 0 0 3.5 11H5"/></svg>`;
+const ckI=`<svg class="copy-icon" viewBox="0 0 16 16"><polyline points="3,8 6.5,11.5 13,4.5"/></svg>`;
+document.querySelectorAll('.code-header').forEach(h=>{
+  const b=document.createElement('button');b.className='copy-btn';b.innerHTML=cpI+'copy';
+  b.addEventListener('click',()=>{
+    const pre=h.nextElementSibling;
+    navigator.clipboard.writeText(pre?pre.innerText:'').then(()=>{
+      b.innerHTML=ckI+'copied';b.classList.add('copied');
+      setTimeout(()=>{b.innerHTML=cpI+'copy';b.classList.remove('copied');},2000);
+    });
+  });h.appendChild(b);
+});
+const htmlEl=document.documentElement;
+const themeLabel=document.getElementById('theme-label');
+function toggleTheme(){
+  const d=htmlEl.classList.toggle('dark');
+  themeLabel.textContent=d?'Dark mode':'Light mode';
+  localStorage.setItem('theme',d?'dark':'light');
+}
+(function(){
+  const s=localStorage.getItem('theme');
+  if(s==='dark'||(!s&&window.matchMedia('(prefers-color-scheme: dark)').matches)){
+    htmlEl.classList.add('dark');if(themeLabel)themeLabel.textContent='Dark mode';
+  }
+})();
+function toggleCheck(el){el.classList.toggle('checked');}
+</script>
+</body>
+</html>
